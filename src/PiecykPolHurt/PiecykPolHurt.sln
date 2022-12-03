@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PiecykPolHurt.API", "PiecykPolHurt.API\PiecykPolHurt.API.csproj", "{3ADF9EE3-0974-4D32-8FDF-511EED6784F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PiecykPolHurt.API", "PiecykPolHurt.API\PiecykPolHurt.API.csproj", "{3ADF9EE3-0974-4D32-8FDF-511EED6784F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PiecykPolHurt.Model", "PiecykPolHurt.Model\PiecykPolHurt.Model.csproj", "{62A68466-0A06-430D-AC21-9A9F9FB2F8AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PiecykPolHurt.Model", "PiecykPolHurt.Model\PiecykPolHurt.Model.csproj", "{62A68466-0A06-430D-AC21-9A9F9FB2F8AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PiecykPolHurt.DataLayer", "PiecykPolHurt.DataLayer\PiecykPolHurt.DataLayer.csproj", "{D87D2DE3-5272-451B-BD03-E906ECF1FACE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PiecykPolHurt.DataLayer", "PiecykPolHurt.DataLayer\PiecykPolHurt.DataLayer.csproj", "{D87D2DE3-5272-451B-BD03-E906ECF1FACE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PiecykPolHurt.Logic", "PiecykPolHurt.Logic\PiecykPolHurt.Logic.csproj", "{6F5FAF42-84EC-4D05-8AC9-A57609A5A753}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PiecykPolHurt.ApplicationLogic", "PiecykPolHurt.ApplicationLogic\PiecykPolHurt.ApplicationLogic.csproj", "{3FA7C37F-D304-4D37-A2B1-76B77520FC11}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{D87D2DE3-5272-451B-BD03-E906ECF1FACE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D87D2DE3-5272-451B-BD03-E906ECF1FACE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D87D2DE3-5272-451B-BD03-E906ECF1FACE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6F5FAF42-84EC-4D05-8AC9-A57609A5A753}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6F5FAF42-84EC-4D05-8AC9-A57609A5A753}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6F5FAF42-84EC-4D05-8AC9-A57609A5A753}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6F5FAF42-84EC-4D05-8AC9-A57609A5A753}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FA7C37F-D304-4D37-A2B1-76B77520FC11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FA7C37F-D304-4D37-A2B1-76B77520FC11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FA7C37F-D304-4D37-A2B1-76B77520FC11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FA7C37F-D304-4D37-A2B1-76B77520FC11}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

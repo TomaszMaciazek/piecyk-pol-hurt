@@ -1,6 +1,5 @@
+using PiecykPolHurt.ApplicationLogic;
 using PiecykPolHurt.DataLayer;
-using PiecykPolHurt.Logic;
-using System.Runtime.CompilerServices;
 
 var builder = WebApplication.CreateBuilder(args);
 

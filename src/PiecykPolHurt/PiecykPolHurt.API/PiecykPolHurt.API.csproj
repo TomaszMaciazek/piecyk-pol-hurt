@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -16,8 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PiecykPolHurt.ApplicationLogic\PiecykPolHurt.ApplicationLogic.csproj" />
     <ProjectReference Include="..\PiecykPolHurt.DataLayer\PiecykPolHurt.DataLayer.csproj" />
-    <ProjectReference Include="..\PiecykPolHurt.Logic\PiecykPolHurt.Logic.csproj" />
     <ProjectReference Include="..\PiecykPolHurt.Model\PiecykPolHurt.Model.csproj" />
   </ItemGroup>
 
