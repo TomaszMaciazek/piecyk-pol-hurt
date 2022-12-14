@@ -1,3 +1,5 @@
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using PiecykPolHurt.API.Extensions;
 using PiecykPolHurt.ApplicationLogic;
 using PiecykPolHurt.DataLayer;
 
@@ -9,6 +11,22 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("DefaultPolicy",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:3000")
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials();
+        });
+});
+
+builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddAuth(builder.Configuration);
+
 builder.Services.AddDataLayer(builder.Configuration);
 builder.Services.AddLogic();
 
@@ -21,9 +39,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseCors("DefaultPolicy");
 
-app.UseAuthorization();
+app.UseHttpsRedirection();
+app.UseAuth();
 
 app.MapControllers();
 
