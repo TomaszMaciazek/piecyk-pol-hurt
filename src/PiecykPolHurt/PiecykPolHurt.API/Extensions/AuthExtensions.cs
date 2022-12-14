@@ -18,7 +18,7 @@ public static class AuthExtensions
             options.Audience = configuration["Auth:Audience"];
         });
 
-        services.AddScoped<IUser, AppUser>();
+        services.AddTransient<IUser, AppUser>();
 
         services.AddAuthorization(options =>
         {
