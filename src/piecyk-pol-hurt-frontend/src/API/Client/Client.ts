@@ -2,7 +2,7 @@
 import axios, { Method } from 'axios';
 import data from '../../config.json';
 
-const applicationBase = data.BASE_URL + '/api';
+const applicationBase = data.BASE_URL;
 
 const Client = async (method: Method, endpoint: string, { body }: any = {}, params?: URLSearchParams): Promise<any> => {
   const requestResult = await axios({
