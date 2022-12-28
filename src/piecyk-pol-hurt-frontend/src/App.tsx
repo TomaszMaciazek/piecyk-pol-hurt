@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import { useAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
+import { getPermissions } from './API/Endpoints/User/User';
 
 function App() {
   const { isAuthenticated, isLoading, loginWithRedirect, logout, getAccessTokenSilently } = useAuth0();
@@ -38,6 +39,15 @@ function App() {
 
   return (
     <div className='App'>
+      <button
+        onClick={() =>
+          getPermissions().then((data) => {
+            console.log(data);
+          })
+        }
+      >
+        Test
+      </button>
       <header className='App-header'>
         <button onClick={() => logout({ returnTo: window.location.origin })}>Wyloguj</button>
         <img src={logo} className='App-logo' alt='logo' />
