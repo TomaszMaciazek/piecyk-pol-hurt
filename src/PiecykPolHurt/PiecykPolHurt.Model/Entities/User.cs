@@ -6,7 +6,9 @@ namespace PiecykPolHurt.Model.Entities
     {
         [Required]
         public string Username { get; set; }
+        [Required]
 
         public string Email { get; set; }
+        public ICollection<Order> Orders { get; set; }
     }
 }

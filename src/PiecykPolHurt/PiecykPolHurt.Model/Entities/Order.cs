@@ -5,6 +5,8 @@ namespace PiecykPolHurt.Model.Entities
 {
     public class Order : AuditableEntity
     {
+        public int BuyerId { get; set; }
+        public User Buyer { get; set; }
         [Required]
         public DateTime RequestedReceptionDate { get; set; }
 
@@ -13,5 +15,6 @@ namespace PiecykPolHurt.Model.Entities
         [Required]
         public OrderStatus Status { get; set; }
 
+        public ICollection<OrderLines> Lines { get; set; }
     }
 }
