@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using PiecykPolHurt.API.Extensions;
 using PiecykPolHurt.ApplicationLogic;
@@ -45,5 +46,7 @@ app.UseHttpsRedirection();
 app.UseAuth();
 
 app.MapControllers();
+
+await app.Services.GetService<ApplicationDbContext>().Database.MigrateAsync();
 
 app.Run();
