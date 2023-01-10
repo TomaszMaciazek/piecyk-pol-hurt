@@ -5,6 +5,7 @@ namespace PiecykPolHurt.Model.Entities
 {
     public class Order : AuditableEntity
     {
+        [Required]
         public int BuyerId { get; set; }
         public User Buyer { get; set; }
         [Required]
