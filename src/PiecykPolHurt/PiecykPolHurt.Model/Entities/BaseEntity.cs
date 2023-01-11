@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace PiecykPolHurt.Model.Entities
+﻿namespace PiecykPolHurt.Model.Entities
 {
+    using System.ComponentModel.DataAnnotations;
+
     public class BaseEntity
     {
         [Key]

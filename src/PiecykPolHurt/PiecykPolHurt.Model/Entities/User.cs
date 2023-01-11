@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace PiecykPolHurt.Model.Entities
+﻿namespace PiecykPolHurt.Model.Entities
 {
+    using System.ComponentModel.DataAnnotations;
+
     public class User : BaseEntity
     {
         [Required]
@@ -9,6 +9,7 @@ namespace PiecykPolHurt.Model.Entities
 
         [Required]
         public string Email { get; set; }
+
         public ICollection<Order> Orders { get; set; }
     }
 }

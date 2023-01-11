@@ -1,7 +1,7 @@
-﻿using PiecykPolHurt.Model.Entities;
-
-namespace PiecykPolHurt.DataLayer.Repositories
+﻿namespace PiecykPolHurt.DataLayer.Repositories
 {
+    using PiecykPolHurt.Model.Entities;
+
     public abstract class BaseRepository<T> where T : BaseEntity, new()
     {
         protected ApplicationDbContext _context;

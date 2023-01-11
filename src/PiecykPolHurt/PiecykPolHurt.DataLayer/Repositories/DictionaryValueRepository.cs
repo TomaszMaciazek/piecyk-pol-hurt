@@ -1,7 +1,7 @@
-﻿using PiecykPolHurt.Model.Entities;
-
-namespace PiecykPolHurt.DataLayer.Repositories
+﻿namespace PiecykPolHurt.DataLayer.Repositories
 {
+    using PiecykPolHurt.Model.Entities;
+
     public interface IDictionaryValueRepository : IReadOnlyRepository<DictionaryValue> { }
     public class DictionaryValueRepository : BaseRepository<DictionaryValue>, IDictionaryValueRepository
     {

@@ -1,33 +1,34 @@
-namespace PiecykPolHurt.API.Authorization;
-
-public class AppUser : IUser
+namespace PiecykPolHurt.API.Authorization
 {
-    private readonly IHttpContextAccessor _accessor;
-
-    public AppUser(IHttpContextAccessor accessor)
+    public class AppUser : IUser
     {
-        _accessor = accessor;
-    }
+        private readonly IHttpContextAccessor _accessor;
 
-    public string Email
-    {
-        get
+        public AppUser(IHttpContextAccessor accessor)
         {
-            var userEmail =
-                _accessor.HttpContext?.User?.Claims?.FirstOrDefault(c => c.Type == Claims.Email);
-
-            return userEmail?.Value;
+            _accessor = accessor;
         }
-    }
 
-    public IEnumerable<string> Permissions
+        public string Email
         {
             get
             {
-                var permissions =
-                    _accessor.HttpContext?.User?.Claims?.Where(c => c.Type == Claims.Permissions);
+                var userEmail = _accessor.HttpContext?.User.Claims
+                    .FirstOrDefault(c => c.Type == Claims.Email);
+
+                return userEmail?.Value;
+            }
+        }
+
+        public IEnumerable<string> Permissions
+        {
+            get
+            {
+                var permissions = _accessor.HttpContext?.User.Claims
+                    .Where(c => c.Type == Claims.Permissions);
 
                 return permissions.Select(x => x.Value);
             }
         }
     }
+}

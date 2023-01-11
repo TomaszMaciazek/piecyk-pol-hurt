@@ -5,6 +5,6 @@
         Administrator = 0,
         Customer = 1,
         Worker = 2,
-        Cooperator = 3
+        Cooperator = 3,
     }
 }

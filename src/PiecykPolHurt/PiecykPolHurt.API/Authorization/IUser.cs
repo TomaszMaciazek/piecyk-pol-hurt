@@ -1,7 +1,9 @@
-namespace PiecykPolHurt.API.Authorization;
-
-public interface IUser
+namespace PiecykPolHurt.API.Authorization
 {
-    public string Email { get; }
-    IEnumerable<string> Permissions { get; }
+    public interface IUser
+    {
+        public IEnumerable<string> Permissions { get; }
+
+        public string Email { get; }
+    }
 }

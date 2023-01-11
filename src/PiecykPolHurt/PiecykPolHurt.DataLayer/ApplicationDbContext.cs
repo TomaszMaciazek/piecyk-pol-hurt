@@ -1,22 +1,24 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PiecykPolHurt.Model.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PiecykPolHurt.DataLayer
+﻿namespace PiecykPolHurt.DataLayer
 {
+    using Microsoft.EntityFrameworkCore;
+    using PiecykPolHurt.Model.Entities;
+
     public class ApplicationDbContext : DbContext
     {
         public DbSet<Order> Orders { get; set; }
+
         public DbSet<OrderLines> OrdersLines { get; set; }
+
         public DbSet<Product> Products { get; set; }
+
         public DbSet<SendPoint> SendPoints { get; set; }
+
         public DbSet<ProductSendPoint> ProductSendPoints { get; set; }
+
         public DbSet<User> Users { get; set; }
+
         public DbSet<DictionaryType> DictionaryTypes { get; set; }
+
         public DbSet<DictionaryValue> DictionaryValues { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)

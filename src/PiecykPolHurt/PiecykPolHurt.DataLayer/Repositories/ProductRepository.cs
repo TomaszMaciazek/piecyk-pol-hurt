@@ -1,7 +1,7 @@
-﻿using PiecykPolHurt.Model.Entities;
-
-namespace PiecykPolHurt.DataLayer.Repositories
+﻿namespace PiecykPolHurt.DataLayer.Repositories
 {
+    using PiecykPolHurt.Model.Entities;
+
     public interface IProductRepository : IReadOnlyRepository<Product> { }
     public class ProductRepository : BaseRepository<Product>, IProductRepository
     {

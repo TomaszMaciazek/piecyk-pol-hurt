@@ -1,10 +1,8 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
-
-#nullable disable
-
-namespace PiecykPolHurt.DataLayer.Migrations
+﻿namespace PiecykPolHurt.DataLayer.Migrations
 {
+    using Microsoft.EntityFrameworkCore.Migrations;
+    using System;
+
     /// <inheritdoc />
     public partial class AttributesInit : Migration
     {

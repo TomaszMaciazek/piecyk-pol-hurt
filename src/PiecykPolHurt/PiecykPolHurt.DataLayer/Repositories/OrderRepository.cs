@@ -1,7 +1,7 @@
-﻿using PiecykPolHurt.Model.Entities;
-
-namespace PiecykPolHurt.DataLayer.Repositories
+﻿namespace PiecykPolHurt.DataLayer.Repositories
 {
+    using PiecykPolHurt.Model.Entities;
+
     public interface IOrderRepository: IRepository<Order> { }
     public class OrderRepository : BaseRepository<Order>, IOrderRepository
     {

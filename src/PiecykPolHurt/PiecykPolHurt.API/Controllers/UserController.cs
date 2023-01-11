@@ -1,24 +1,25 @@
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using PiecykPolHurt.API.Authorization;
-
-namespace PiecykPolHurt.API.Controllers;
-
-[Authorize]
-[ApiController]
-[Route("[controller]")]
-public class UserController : ControllerBase
+namespace PiecykPolHurt.API.Controllers
 {
-    private readonly IUser _user;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+    using PiecykPolHurt.API.Authorization;
 
-    public UserController(IUser user)
+    [Authorize]
+    [ApiController]
+    [Route("[controller]")]
+    public class UserController : ControllerBase
     {
-        _user = user;
-    }
+        private readonly IUser _user;
 
-    [HttpGet]
-    public ActionResult<IEnumerable<string>> GetPermissions()
-    {
-        return Ok(_user.Permissions);
+        public UserController(IUser user)
+        {
+            _user = user;
+        }
+
+        [HttpGet]
+        public ActionResult<IEnumerable<string>> GetPermissions()
+        {
+            return Ok(_user.Permissions);
+        }
     }
 }
