@@ -8,11 +8,9 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PiecykPolHurt.DataLayer\PiecykPolHurt.DataLayer.csproj" />
     <ProjectReference Include="..\PiecykPolHurt.Model\PiecykPolHurt.Model.csproj" />
   </ItemGroup>
 
