@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PiecykPolHurt.Model", "Piec
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PiecykPolHurt.DataLayer", "PiecykPolHurt.DataLayer\PiecykPolHurt.DataLayer.csproj", "{D87D2DE3-5272-451B-BD03-E906ECF1FACE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PiecykPolHurt.ApplicationLogic", "PiecykPolHurt.ApplicationLogic\PiecykPolHurt.ApplicationLogic.csproj", "{3FA7C37F-D304-4D37-A2B1-76B77520FC11}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PiecykPolHurt.ApplicationLogic", "PiecykPolHurt.ApplicationLogic\PiecykPolHurt.ApplicationLogic.csproj", "{3FA7C37F-D304-4D37-A2B1-76B77520FC11}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PiecykPolHurt.Mappings", "PiecykPolHurt.Mappings\PiecykPolHurt.Mappings.csproj", "{8BFD2CF0-6844-468E-A4E8-69B7A738E225}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{3FA7C37F-D304-4D37-A2B1-76B77520FC11}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3FA7C37F-D304-4D37-A2B1-76B77520FC11}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3FA7C37F-D304-4D37-A2B1-76B77520FC11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BFD2CF0-6844-468E-A4E8-69B7A738E225}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BFD2CF0-6844-468E-A4E8-69B7A738E225}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BFD2CF0-6844-468E-A4E8-69B7A738E225}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BFD2CF0-6844-468E-A4E8-69B7A738E225}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
