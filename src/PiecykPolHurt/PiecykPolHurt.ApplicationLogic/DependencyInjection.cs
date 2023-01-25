@@ -9,6 +9,7 @@ namespace PiecykPolHurt.ApplicationLogic
         {
             services.AddScoped<ISendPointService, SendPointService>();
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IReportService, ReportService>();
             return services;
         }
     }
