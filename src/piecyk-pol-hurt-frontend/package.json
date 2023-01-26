@@ -4,6 +4,11 @@
   "private": true,
   "dependencies": {
     "@auth0/auth0-react": "^1.12.0",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@mui/icons-material": "^5.11.0",
+    "@mui/material": "^5.11.3",
+    "@mui/x-data-grid-generator": "^5.17.18",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -14,6 +19,8 @@
     "axios": "^1.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-leaflet": "^4.2.0",
+    "react-router-dom": "^6.6.1",
     "react-scripts": "5.0.1",
     "sass": "^1.56.1",
     "typescript": "^4.9.3",
@@ -44,6 +51,7 @@
     ]
   },
   "devDependencies": {
+    "@types/leaflet": "^1.9.0",
     "@typescript-eslint/eslint-plugin": "^5.44.0",
     "@typescript-eslint/parser": "^5.44.0",
     "eslint": "^8.28.0",

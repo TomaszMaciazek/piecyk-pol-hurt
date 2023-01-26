@@ -4,6 +4,8 @@ import './index.scss';
 import App from './App';
 import { Auth0Provider } from '@auth0/auth0-react';
 import { Auth0 } from './API/Auth0/Auth0';
+import 'leaflet/dist/leaflet.css';
+import './MUI/Mui.scss';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
