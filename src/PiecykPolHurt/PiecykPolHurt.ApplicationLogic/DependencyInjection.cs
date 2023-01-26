@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using PiecykPolHurt.ApplicationLogic.Services;
 
 namespace PiecykPolHurt.ApplicationLogic
 {
@@ -6,6 +7,8 @@ namespace PiecykPolHurt.ApplicationLogic
     {
         public static IServiceCollection AddLogic(this IServiceCollection services)
         {
+            services.AddScoped<ISendPointService, SendPointService>();
+            services.AddScoped<IProductService, ProductService>();
             return services;
         }
     }

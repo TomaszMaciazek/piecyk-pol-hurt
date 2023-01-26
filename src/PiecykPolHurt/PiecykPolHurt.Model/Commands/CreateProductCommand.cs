@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PiecykPolHurt.Model.Entities
+namespace PiecykPolHurt.Model.Commands
 {
-    public class Product : AuditableEntity
+    public class CreateProductCommand
     {
         [Required]
         public string Name { get; set; }
@@ -11,7 +11,6 @@ namespace PiecykPolHurt.Model.Entities
         [Required]
         public decimal Price { get; set; }
         public string ImageUrl { get; set; }
-        public ICollection<OrderLines> Lines { get; set; }
-        public ICollection<ProductSendPoint> SendPoints { get; set; }
+        public IEnumerable<int> SendPointsIds { get; set; }
     }
 }

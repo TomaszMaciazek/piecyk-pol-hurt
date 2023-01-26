@@ -1,7 +1,9 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using PiecykPolHurt.API.Extensions;
 using PiecykPolHurt.ApplicationLogic;
 using PiecykPolHurt.DataLayer;
+using PiecykPolHurt.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +30,7 @@ builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddAuth(builder.Configuration);
 
 builder.Services.AddDataLayer(builder.Configuration);
+builder.Services.AddMappings();
 builder.Services.AddLogic();
 
 var app = builder.Build();
@@ -45,5 +48,7 @@ app.UseHttpsRedirection();
 app.UseAuth();
 
 app.MapControllers();
+
+await app.Services.GetService<ApplicationDbContext>().Database.MigrateAsync();
 
 app.Run();
