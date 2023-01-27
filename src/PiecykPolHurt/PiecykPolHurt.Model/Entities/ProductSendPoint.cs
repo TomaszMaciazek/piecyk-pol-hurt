@@ -12,5 +12,7 @@ namespace PiecykPolHurt.Model.Entities
         public SendPoint SendPoint { get; set; }
         [Required]
         public int AvailableQuantity { get; set; }
+        [Required]
+        public DateTime ForDate { get; set; }
     }
 }
