@@ -18,6 +18,7 @@ namespace PiecykPolHurt.DataLayer
         public DbSet<User> Users { get; set; }
         public DbSet<DictionaryType> DictionaryTypes { get; set; }
         public DbSet<DictionaryValue> DictionaryValues { get; set; }
+        public DbSet<ReportDefinition> ReportDefinitions { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
