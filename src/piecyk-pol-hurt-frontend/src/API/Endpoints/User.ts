@@ -1,4 +1,4 @@
-import { Client } from '../../Client/Client';
+import { Client } from '../Client/Client';
 
 const controllerName = 'User';
 

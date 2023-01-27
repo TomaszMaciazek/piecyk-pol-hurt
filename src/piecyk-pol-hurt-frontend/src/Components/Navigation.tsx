@@ -13,11 +13,10 @@ import {
   Drawer,
   Button,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
 
 const Navigation = () => {
@@ -30,31 +29,13 @@ const Navigation = () => {
     setDrawerOpen(!drawerOpen);
   };
 
-  const { isAuthenticated, logout, getAccessTokenSilently, loginWithPopup } =
-    useAuth0();
-
-  const getAccessToken = async () => {
-    const accessToken = await getAccessTokenSilently();
-
-    axios.interceptors.request.use((config) => {
-      if (config && config.headers) {
-        config.headers["Authorization"] = `Bearer ${accessToken}`;
-      }
-      return config;
-    });
-  };
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      getAccessToken();
-    }
-  }, [isAuthenticated]);
+  const { isAuthenticated, logout, loginWithPopup } = useAuth0();
 
   const authenticateAction = () => {
     if (isAuthenticated) {
       logout();
     } else {
-      loginWithPopup();
+      loginWithPopup({ui_locales: 'pl'});
     }
   };
 
@@ -82,7 +63,10 @@ const Navigation = () => {
   return (
     <>
       <AppBar position="static">
-        <Container maxWidth="xl" sx={{ height: "65x", marginLeft: 0,  maxWidth: '3000px' }}>
+        <Container
+          maxWidth="xl"
+          sx={{ height: "65x", marginLeft: 0, maxWidth: "3000px" }}
+        >
           <Toolbar disableGutters>
             <Typography
               variant="h6"
@@ -159,8 +143,7 @@ const Navigation = () => {
             keepMounted: true,
           }}
           sx={{
-            display: { xs: "block", sm: "none" },
-            "& .MuiDrawer-paper": { boxSizing: "border-box", width: 200 },
+            "& .MuiDrawer-paper": { boxSizing: "border-box", width: 300 },
           }}
         >
           {drawer}

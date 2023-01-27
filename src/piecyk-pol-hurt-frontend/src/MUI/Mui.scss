@@ -1,14 +1,14 @@
 .MuiDataGrid-row:nth-child(odd) {
-    background-color: rgb(163, 171, 179);
+    background-color: #F8F9FA;
     &:hover {
-      background-color: rgb(54, 139, 224) !important;
+      background-color: darkgray !important;
     }
   }
   
   .MuiDataGrid-row:nth-child(even) {
-    background-color: #cef;
+    background-color: #EBECED;
     &:hover {
-      background-color: rgb(54, 139, 224) !important;
+      background-color: darkgray !important;
     }
   }
   

@@ -39,10 +39,10 @@ const Products = () => {
             />
             <CardContent>
               <Typography gutterBottom variant="h5" component="div">
-                {"3"}
+                Węgiel
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {"4"}
+                węgiel super się pali
               </Typography>
             </CardContent>
             <CardActions>
