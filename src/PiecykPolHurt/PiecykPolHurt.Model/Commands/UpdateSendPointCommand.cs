@@ -1,9 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace PiecykPolHurt.Model.Commands
+﻿namespace PiecykPolHurt.Model.Commands
 {
-    public class CreateSendPointCommand
+    public class UpdateSendPointCommand
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Code { get; set; }
         public string City { get; set; }

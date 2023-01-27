@@ -7,7 +7,7 @@ namespace PiecykPolHurt.Mappings.Profiles
 {
     public class ReportProfile : Profile
     {
-        protected ReportProfile()
+        public ReportProfile()
         {
             CreateMap<ReportDefinition, ReportListItemDto>();
             CreateMap<ReportDefinition, ReportDefinitionDto>();

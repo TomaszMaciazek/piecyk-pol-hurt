@@ -15,9 +15,9 @@ namespace PiecykPolHurt.Model.Entities
 
         [Required]
         public bool IsActive { get; set; }
-        public ICollection<ProductSendPoint> Products { get; set; }
-
         public double Logitude { get; set; }
         public double Latitude { get; set; }
+        public ICollection<ProductSendPoint> Products { get; set; }
+        public ICollection<Order> Orders { get; set; }
     }
 }
