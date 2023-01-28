@@ -14,6 +14,9 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
+import { persistor, store } from "./Redux/store";
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -27,12 +30,16 @@ root.render(
     redirectUri={window.location.origin}
     cacheLocation="localstorage"
   >
-    <ThemeProvider theme={theme}>
-      <DateFnsProvider adapterLocale={locale}>
-        <React.StrictMode>
-          <App />
-        </React.StrictMode>
-      </DateFnsProvider>
-    </ThemeProvider>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <ThemeProvider theme={theme}>
+          <DateFnsProvider adapterLocale={locale}>
+            <React.StrictMode>
+              <App />
+            </React.StrictMode>
+          </DateFnsProvider>
+        </ThemeProvider>
+      </PersistGate>
+    </Provider>
   </Auth0Provider>
 );

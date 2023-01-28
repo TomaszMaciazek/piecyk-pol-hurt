@@ -12,12 +12,25 @@ import {
   ListItemText,
   Drawer,
   Button,
+  Badge,
+  BadgeProps,
+  styled,
 } from "@mui/material";
 import { useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+
+const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
+  '& .MuiBadge-badge': {
+    right: -3,
+    top: 13,
+    border: `2px solid ${theme.palette.background.paper}`,
+    padding: '0 4px',
+  },
+}));
 
 const Navigation = () => {
   const pages = ["Produkty", "Zamówienia", "Lokacje"];
@@ -35,7 +48,7 @@ const Navigation = () => {
     if (isAuthenticated) {
       logout();
     } else {
-      loginWithPopup({ui_locales: 'pl'});
+      loginWithPopup({ ui_locales: "pl" });
     }
   };
 
@@ -127,6 +140,11 @@ const Navigation = () => {
                 </Button>
               ))}
             </Box>
+            <IconButton size="large" sx={{mr: 2}}>
+              <StyledBadge badgeContent={4} color="info">
+                <ShoppingCartIcon sx={{ color: "white" }} />
+              </StyledBadge>
+            </IconButton>
             <Box sx={{ flexGrow: 0 }} onClick={authenticateAction}>
               {isAuthenticated ? "Wyloguj" : "Zaloguj"}
             </Box>

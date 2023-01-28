@@ -1,4 +1,9 @@
-import { EditOutlined, DeleteOutlineOutlined, Add } from "@mui/icons-material";
+import {
+  EditOutlined,
+  DeleteOutlineOutlined,
+  Add,
+  Remove,
+} from "@mui/icons-material";
 import {
   Grid,
   Card,
@@ -8,21 +13,28 @@ import {
   CardActions,
   Button,
   IconButton,
+  ButtonGroup,
+  TextField,
 } from "@mui/material";
 import React, { useState } from "react";
 import ConfirmationDialog from "../Common/ConfirmationDialog";
+import OrderModal from "../Components/OrderModal";
 import ProductModal from "../Components/ProductModal";
+import "../SCSS/Products.scss";
 
 const Products = () => {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
-  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [openProductModal, setOpenProductModal] = useState<boolean>(false);
+  const [openOrderModal, setOpenOrderModal] = useState<boolean>(false);
+  const [count, setCount] = useState<number>(0);
+
   return (
     <>
       <Grid justifyContent="flex-end" container marginBottom={2}>
         <Button
           variant="contained"
           endIcon={<Add />}
-          onClick={() => setOpenModal(true)}
+          onClick={() => setOpenProductModal(true)}
         >
           Dodaj produkt
         </Button>
@@ -47,11 +59,41 @@ const Products = () => {
             </CardContent>
             <CardActions>
               <Grid container spacing={1} justifyContent="space-between">
-                <Button size="small" onClick={() => setOpenModal(true)}>Złóż zamówienie</Button>
+                <div>
+                  <Button size="small" onClick={() => setOpenOrderModal(true)}>
+                    Dodaj do koszyka
+                  </Button>
+                  <ButtonGroup>
+                    <Button
+                      onClick={() => {
+                        setCount(Math.max(count - 1, 0));
+                      }}
+                    >
+                      <Remove fontSize="small" />
+                    </Button>
+                    <Button className='count-button'>
+                    <input
+                      value={count}
+                      onChange={(e) => {
+                        setCount(parseInt(e.target.value));
+                      }}
+                      className='count'
+                      type="tel"
+                      />
+                      </Button>
+                    <Button
+                      onClick={() => {
+                        setCount(count + 1);
+                      }}
+                    >
+                      <Add fontSize="small" />
+                    </Button>
+                  </ButtonGroup>
+                </div>
                 <div>
                   <IconButton
                     onClick={() => {
-                      setOpenModal(true);
+                      setOpenProductModal(true);
                     }}
                   >
                     <EditOutlined />
@@ -76,9 +118,15 @@ const Products = () => {
       />
       <ProductModal
         handleClose={() => {
-          setOpenModal(false);
+          setOpenProductModal(false);
         }}
-        open={openModal}
+        open={openProductModal}
+      />
+      <OrderModal
+        handleClose={() => {
+          setOpenOrderModal(false);
+        }}
+        open={openOrderModal}
       />
     </>
   );
