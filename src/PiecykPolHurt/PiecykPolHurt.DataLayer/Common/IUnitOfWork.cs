@@ -8,7 +8,8 @@ namespace PiecykPolHurt.DataLayer.Common
         IOrderRepository OrderRepository { get; }
         IProductRepository ProductRepository { get; }
         ISendPointRepository SendPointRepository { get; }
-
+        IReportDefinitionRepository ReportDefinitionRepository { get; }
+        string ConnectionString { get; }
         Task SaveChangesAsync();
     }
 }

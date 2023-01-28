@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PiecykPolHurt.DataLayer;
 
@@ -11,9 +12,11 @@ using PiecykPolHurt.DataLayer;
 namespace PiecykPolHurt.DataLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230127151827_Added-Coordinations")]
+    partial class AddedCoordinations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -93,17 +96,12 @@ namespace PiecykPolHurt.DataLayer.Migrations
                     b.Property<DateTime>("RequestedReceptionDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("SendPointId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("BuyerId");
-
-                    b.HasIndex("SendPointId");
 
                     b.ToTable("Orders");
                 });
@@ -333,15 +331,7 @@ namespace PiecykPolHurt.DataLayer.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("PiecykPolHurt.Model.Entities.SendPoint", "SendPoint")
-                        .WithMany("Orders")
-                        .HasForeignKey("SendPointId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("Buyer");
-
-                    b.Navigation("SendPoint");
                 });
 
             modelBuilder.Entity("PiecykPolHurt.Model.Entities.OrderLines", b =>
@@ -399,8 +389,6 @@ namespace PiecykPolHurt.DataLayer.Migrations
 
             modelBuilder.Entity("PiecykPolHurt.Model.Entities.SendPoint", b =>
                 {
-                    b.Navigation("Orders");
-
                     b.Navigation("Products");
                 });
 

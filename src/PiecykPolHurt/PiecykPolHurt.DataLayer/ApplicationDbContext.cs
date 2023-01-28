@@ -18,6 +18,7 @@ namespace PiecykPolHurt.DataLayer
         public DbSet<User> Users { get; set; }
         public DbSet<DictionaryType> DictionaryTypes { get; set; }
         public DbSet<DictionaryValue> DictionaryValues { get; set; }
+        public DbSet<ReportDefinition> ReportDefinitions { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -29,6 +30,12 @@ namespace PiecykPolHurt.DataLayer
                 .HasMany(x => x.Lines)
                 .WithOne(x => x.Order)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<SendPoint>()
+                .HasMany(x => x.Orders)
+                .WithOne(x => x.SendPoint)
+                .HasForeignKey(x => x.SendPointId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Order>()
                 .HasOne(x => x.Buyer)

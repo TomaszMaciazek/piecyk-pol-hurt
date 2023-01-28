@@ -1,4 +1,5 @@
-﻿using PiecykPolHurt.DataLayer.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using PiecykPolHurt.DataLayer.Repositories;
 
 namespace PiecykPolHurt.DataLayer.Common
 {
@@ -10,6 +11,11 @@ namespace PiecykPolHurt.DataLayer.Common
         public IOrderRepository OrderRepository { get; private set; }
         public ISendPointRepository SendPointRepository { get; private set; }
         public IDictionaryValueRepository DictionaryValueRepository { get; set; }
+        public IReportDefinitionRepository ReportDefinitionRepository { get; set; }
+        public string ConnectionString { get => 
+                !string.IsNullOrEmpty(_context.Database.GetConnectionString())
+                ? _context.Database.GetConnectionString()
+                : throw new EmptyConnectionStringException(); }
         public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
@@ -17,6 +23,7 @@ namespace PiecykPolHurt.DataLayer.Common
             OrderRepository = new OrderRepository(_context);
             SendPointRepository = new SendPointRepository(_context);
             DictionaryValueRepository = new DictionaryValueRepository(_context);
+            ReportDefinitionRepository = new ReportDefinitionRepository(_context);
         }
 
         public async Task SaveChangesAsync()
