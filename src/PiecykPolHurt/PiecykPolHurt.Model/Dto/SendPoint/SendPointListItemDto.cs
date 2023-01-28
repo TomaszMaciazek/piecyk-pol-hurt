@@ -9,5 +9,7 @@
         public string Street { get; set; }
         public string BuildingNumber { get; set; }
         public bool IsActive { get; set; }
+        public double Logitude { get; set; }
+        public double Latitude { get; set; }
     }
 }

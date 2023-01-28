@@ -135,6 +135,7 @@ const Navigation = () => {
                   key={page}
                   onClick={() => navigate(links[index])}
                   sx={{ my: 2, color: "white", display: "block" }}
+                  variant='text'
                 >
                   {page}
                 </Button>

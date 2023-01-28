@@ -14,7 +14,6 @@ import {
   Button,
   IconButton,
   ButtonGroup,
-  TextField,
 } from "@mui/material";
 import React, { useState } from "react";
 import ConfirmationDialog from "../Common/ConfirmationDialog";
@@ -31,11 +30,7 @@ const Products = () => {
   return (
     <>
       <Grid justifyContent="flex-end" container marginBottom={2}>
-        <Button
-          variant="contained"
-          endIcon={<Add />}
-          onClick={() => setOpenProductModal(true)}
-        >
+        <Button endIcon={<Add />} onClick={() => setOpenProductModal(true)}>
           Dodaj produkt
         </Button>
       </Grid>
@@ -71,17 +66,18 @@ const Products = () => {
                     >
                       <Remove fontSize="small" />
                     </Button>
-                    <Button className='count-button'>
-                    <input
-                      value={count}
-                      onChange={(e) => {
-                        setCount(parseInt(e.target.value));
-                      }}
-                      className='count'
-                      type="tel"
+                    <Button className="count-button">
+                      <input
+                        value={count}
+                        onChange={(e) => {
+                          setCount(parseInt(e.target.value));
+                        }}
+                        className="count"
+                        type="tel"
                       />
-                      </Button>
+                    </Button>
                     <Button
+                      variant="contained"
                       onClick={() => {
                         setCount(count + 1);
                       }}

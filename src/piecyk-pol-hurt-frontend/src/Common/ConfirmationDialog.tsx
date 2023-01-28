@@ -45,11 +45,11 @@ const ConfirmationDialog = ({
             handleClose();
           }}
           color="secondary"
-          data-cy="confirm-button"
+          variant="contained"
         >
           Tak
         </Button>
-        <Button onClick={handleClose} autoFocus>
+        <Button variant="contained" onClick={handleClose} autoFocus>
           Anuluj
         </Button>
       </DialogActions>

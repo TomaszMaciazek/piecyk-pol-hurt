@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PiecykPolHurt.ApplicationLogic.Result;
 using PiecykPolHurt.ApplicationLogic.Services;
 using PiecykPolHurt.Model.Commands;
 using PiecykPolHurt.Model.Dto;
-using PiecykPolHurt.Model.Dto.Report;
 using PiecykPolHurt.Model.Queries;
 
 namespace PiecykPolHurt.API.Controllers
