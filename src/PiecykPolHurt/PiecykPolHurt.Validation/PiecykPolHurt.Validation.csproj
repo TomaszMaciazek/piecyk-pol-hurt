@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PiecykPolHurt.DataLayer\PiecykPolHurt.DataLayer.csproj" />
     <ProjectReference Include="..\PiecykPolHurt.Model\PiecykPolHurt.Model.csproj" />
   </ItemGroup>
 
