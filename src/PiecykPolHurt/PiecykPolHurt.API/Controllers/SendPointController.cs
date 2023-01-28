@@ -37,7 +37,7 @@ namespace PiecykPolHurt.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SendPointDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<PaginatedList<SendPointListItemDto>>> GetSendPoints([FromRoute] int id)
+        public async Task<ActionResult<PaginatedList<SendPointDto>>> GetSendPoint([FromRoute] int id)
         {
             try
             {
