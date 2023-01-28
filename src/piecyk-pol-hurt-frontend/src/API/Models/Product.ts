@@ -1,4 +1,4 @@
-import { SendPoint } from "./SendPoint";
+import { SendPoint } from "./SendPoint/SendPoint";
 
 export interface Product {
     id: number;

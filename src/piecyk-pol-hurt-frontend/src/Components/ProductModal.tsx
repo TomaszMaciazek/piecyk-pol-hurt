@@ -1,5 +1,5 @@
 import { Modal, Box, TextField, Button } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ModalStyle } from "../Styles/ModalStyles";
 
 interface IProductModal {

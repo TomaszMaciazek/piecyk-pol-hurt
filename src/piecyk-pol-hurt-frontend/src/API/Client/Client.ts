@@ -2,9 +2,9 @@
 import axios, { Method } from 'axios';
 import data from '../../config.json';
 
-const applicationBase = data.BASE_URL;
+const applicationBase = data.BASE_URL + '/api';
 
-const Client = async (method: Method, endpoint: string, { body }: any = {}, params?: URLSearchParams): Promise<any> => {
+const Client = async (method: Method, endpoint: string, { body }: any = {}, params?: any): Promise<any> => {
   const requestResult = await axios({
     method: method,
     url: `${applicationBase}/${endpoint}`,
@@ -14,7 +14,7 @@ const Client = async (method: Method, endpoint: string, { body }: any = {}, para
     },
     data: JSON.stringify(body),
     responseType: 'json',
-    params: params,
+    params: new URLSearchParams(params as any),
   });
 
   return requestResult.data;

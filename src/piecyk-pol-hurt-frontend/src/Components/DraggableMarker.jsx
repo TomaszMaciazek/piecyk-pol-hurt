@@ -1,4 +1,5 @@
-import { useCallback, useMemo, useRef, useState, useEffect } from "react";
+import { Button } from "@mui/material";
+import { useMemo, useRef, useEffect } from "react";
 import { Marker, Popup } from "react-leaflet";
 
 const DraggableMarker = (props) => {
@@ -11,8 +12,6 @@ const DraggableMarker = (props) => {
       shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
     });
   }, []);
-
-  const [draggable, setDraggable] = useState(true);
   const markerRef = useRef(null);
   const eventHandlers = useMemo(
     () => ({
@@ -25,25 +24,26 @@ const DraggableMarker = (props) => {
         }
       },
     }),
-    []
+    [props]
   );
-  const toggleDraggable = useCallback(() => {
-    setDraggable((d) => d);
-  }, []);
+
+  const deleteMarker = () => {
+    props.setLatitude(null);
+    props.setLongitude(null);
+    props.setDisableMapEvents(true);
+  };
 
   return (
     <Marker
-      draggable={draggable}
+      draggable
       eventHandlers={eventHandlers}
       position={{ lat: props.latitude, lng: props.longitude }}
       ref={markerRef}
     >
       <Popup minWidth={90}>
-        <span onClick={toggleDraggable}>
-          {draggable
-            ? "Marker is draggable"
-            : "Click here to make marker draggable"}
-        </span>
+        <Button variant="contained" color="error" onClick={deleteMarker}>
+          Usuń marker
+        </Button>
       </Popup>
     </Marker>
   );

@@ -46,7 +46,7 @@ const OrderModal = ({ open, handleClose }: IOrderModal) => {
                 required
                 style={{width: '60%'}}
               />
-              <Button size='small' variant="contained" style={{marginBottom: '16px'}}>Otwórz mapę</Button>
+              <Button size='small' style={{marginBottom: '16px'}}>Otwórz mapę</Button>
             </Grid>
             <TextFieldElement
               name="description"
@@ -56,8 +56,8 @@ const OrderModal = ({ open, handleClose }: IOrderModal) => {
               rows={4}
             />
             <Button
-              variant="contained"
               type="submit"
+              variant="contained"
               sx={{ mt: 2 }}
               onClick={() => undefined}
             >

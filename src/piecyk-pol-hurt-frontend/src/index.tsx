@@ -7,7 +7,6 @@ import { Auth0 } from "./API/Auth0/Auth0";
 import "leaflet/dist/leaflet.css";
 import "./MUI/Mui.scss";
 import locale from "date-fns/locale/pl";
-import { ThemeProvider } from "@emotion/react";
 import { DateFnsProvider } from "./MUI/DateFnsProvider";
 import { theme } from "./MUI/Theme";
 import "@fontsource/roboto/300.css";
@@ -17,6 +16,7 @@ import "@fontsource/roboto/700.css";
 import { persistor, store } from "./Redux/store";
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
+import { ThemeProvider } from "@mui/material";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
