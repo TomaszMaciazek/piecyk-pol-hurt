@@ -22,10 +22,10 @@ public static class AuthExtensions
 
         services.AddAuthorization(options =>
         {
-            options.AddPolicy("Admin", policy =>
-                policy.RequireClaim(Claims.Permissions, "admin"));
-            options.AddPolicy("Seller", policy =>
-                policy.RequireClaim(Claims.Permissions, "seller"));
+            options.AddPolicy(Policy.Admin, policy =>
+                policy.RequireClaim(Claims.Permissions, PermissionName.Admin));
+            options.AddPolicy(Policy.Seller, policy =>
+                policy.RequireClaim(Claims.Permissions, PermissionName.Seller));
         });
     }
 

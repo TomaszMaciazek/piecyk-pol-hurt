@@ -42,13 +42,13 @@ const Navigation = () => {
     setDrawerOpen(!drawerOpen);
   };
 
-  const { isAuthenticated, logout, loginWithPopup } = useAuth0();
+  const { isAuthenticated, logout, loginWithRedirect } = useAuth0();
 
   const authenticateAction = () => {
     if (isAuthenticated) {
       logout();
     } else {
-      loginWithPopup({ ui_locales: "pl" });
+      loginWithRedirect({ ui_locales: "pl" });
     }
   };
 

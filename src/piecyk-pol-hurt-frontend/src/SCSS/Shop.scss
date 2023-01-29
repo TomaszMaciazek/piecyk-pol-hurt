@@ -1,28 +1,20 @@
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0; 
-}
-
-.MuiInputBase-input {
-    border: 1px solid rgba(25, 118, 210, 0.5);
-    border-left: 0px solid white;
-}
-
 .count {
-    width: 50px;
-    border: 0px;
-}
+    width: 80px;
+    .MuiInputBase-root {
+        border: 1px solid rgba(25, 118, 210, 0.5);
+        border-radius: 0px !important;
 
-.count:active {
-    border: 0px;
-}
-
-.count-button {
-    border: 1px solid rgba(25, 118, 210, 0.5) !important;
-    border-right: 0px solid;
-}
-
-.MuiButton-outlined {
-
+        &:hover {
+            border: 1px solid rgba(25, 118, 210);
+        }
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
 }

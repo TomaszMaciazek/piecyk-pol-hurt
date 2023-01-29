@@ -1,9 +1,4 @@
-import {
-  EditOutlined,
-  DeleteOutlineOutlined,
-  Add,
-  Remove,
-} from "@mui/icons-material";
+import { Add, Remove } from "@mui/icons-material";
 import {
   Grid,
   Card,
@@ -12,27 +7,20 @@ import {
   Typography,
   CardActions,
   Button,
-  IconButton,
   ButtonGroup,
+  TextField,
 } from "@mui/material";
 import React, { useState } from "react";
-import ConfirmationDialog from "../Common/ConfirmationDialog";
 import OrderModal from "../Components/OrderModal";
 import "../SCSS/Shop.scss";
 
 const Shop = () => {
-  const [openDialog, setOpenDialog] = useState<boolean>(false);
-  const [openProductModal, setOpenProductModal] = useState<boolean>(false);
   const [openOrderModal, setOpenOrderModal] = useState<boolean>(false);
   const [count, setCount] = useState<number>(0);
 
   return (
     <>
-      <Grid justifyContent="flex-end" container marginBottom={2}>
-        <Button endIcon={<Add />} onClick={() => setOpenProductModal(true)}>
-          Dodaj produkt
-        </Button>
-      </Grid>
+      <Grid justifyContent="flex-end" container marginBottom={2}></Grid>
       <Grid container spacing={2}>
         <Grid item key={"1"}>
           <Card sx={{ width: 350 }}>
@@ -53,64 +41,46 @@ const Shop = () => {
             </CardContent>
             <CardActions>
               <Grid container spacing={1} justifyContent="space-between">
-                <div>
-                  <Button size="small" onClick={() => setOpenOrderModal(true)}>
-                    Dodaj do koszyka
+                <Button size="small" onClick={() => setOpenOrderModal(true)}>
+                  Dodaj do koszyka
+                </Button>
+                <ButtonGroup>
+                  <Button
+                    onClick={() => {
+                      setCount(Math.max(count - 1, 0));
+                    }}
+                    size="small"
+                  >
+                    <Remove fontSize="small" />
                   </Button>
-                  <ButtonGroup>
-                    <Button
-                      onClick={() => {
-                        setCount(Math.max(count - 1, 0));
-                      }}
-                    >
-                      <Remove fontSize="small" />
-                    </Button>
-                    <Button className="count-button">
-                      <input
-                        value={count}
-                        onChange={(e) => {
-                          setCount(parseInt(e.target.value));
-                        }}
-                        className="count"
-                        type="tel"
-                      />
-                    </Button>
-                    <Button
-                      variant="contained"
-                      onClick={() => {
-                        setCount(count + 1);
-                      }}
-                    >
-                      <Add fontSize="small" />
-                    </Button>
-                  </ButtonGroup>
-                </div>
-                <div>
-                  <IconButton
-                    onClick={() => {
-                      setOpenProductModal(true);
+                  <TextField
+                    value={Number.isNaN(count) ? 0 : count}
+                    onChange={(e) => {
+                      setCount(parseInt(e.target.value));
                     }}
-                  >
-                    <EditOutlined />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => {
-                      setOpenDialog(true);
+                    className="count"
+                    type="number"
+                    size="small"
+                    inputProps={{style: { textAlign: 'center' }}}
+                    sx={{
+                      "& fieldset": { border: "none" },
                     }}
+                  />
+                  <Button
+                    variant="contained"
+                    onClick={() => {
+                      setCount(count + 1);
+                    }}
+                    size="small"
                   >
-                    <DeleteOutlineOutlined />
-                  </IconButton>
-                </div>
+                    <Add fontSize="small" />
+                  </Button>
+                </ButtonGroup>
               </Grid>
             </CardActions>
           </Card>
         </Grid>
       </Grid>
-      <ConfirmationDialog
-        open={openDialog}
-        handleClose={() => setOpenDialog(false)}
-        handleConfirm={() => undefined}
-      />
       <OrderModal
         handleClose={() => {
           setOpenOrderModal(false);
