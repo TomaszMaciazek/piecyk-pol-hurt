@@ -5,6 +5,7 @@ import {
   TextFieldElement,
   CheckboxElement,
 } from "react-hook-form-mui";
+import { toast } from "react-toastify";
 import { addProduct, updateProduct } from "../API/Endpoints/Product";
 import { CreateProductCommand } from "../API/Models/Product/CreateProductCommand";
 import { Product } from "../API/Models/Product/Product";
@@ -28,16 +29,28 @@ const ProductModal = ({
     if (editedProduct) {
       const request = data as UpdateProductCommand;
       request.id = editedProduct.id;
-      
-      updateProduct(request).then(() => {
-        setRefresh(true);
-        onClose();
-      });
+
+      updateProduct(request)
+        .then(() => {
+          setRefresh(true);
+          onClose();
+        })
+        .catch((reason) => {
+          if (reason.response.status === 409) {
+            toast.error("Kod musi być unikalny");
+          }
+        });
     } else {
-      addProduct(data).then(() => {
-        setRefresh(true);
-        onClose();
-      });
+      addProduct(data)
+        .then(() => {
+          setRefresh(true);
+          onClose();
+        })
+        .catch((reason) => {
+          if (reason.response.status === 409) {
+            toast.error("Kod musi być unikalny");
+          }
+        });
     }
   };
 

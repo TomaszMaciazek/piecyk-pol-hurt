@@ -14,9 +14,11 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { persistor, store } from "./Redux/store";
-import { Provider } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react';
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
 import { ThemeProvider } from "@mui/material";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -34,6 +36,19 @@ root.render(
       <PersistGate loading={null} persistor={persistor}>
         <ThemeProvider theme={theme}>
           <DateFnsProvider adapterLocale={locale}>
+            <ToastContainer
+              position="top-center"
+              autoClose={4000}
+              hideProgressBar
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="dark"
+              limit={3}
+            />
             <React.StrictMode>
               <App />
             </React.StrictMode>
