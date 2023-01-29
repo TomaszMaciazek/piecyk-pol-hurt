@@ -1,5 +1,5 @@
 import { Modal, Box, Grid, Button, TextField } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   CheckboxElement,
   FormContainer,
@@ -31,14 +31,14 @@ const MapModal = ({
     editedSendPoint ? editedSendPoint.latitude : null
   );
   const [longitude, setLongitude] = useState<number | null>(
-    editedSendPoint ? editedSendPoint.longitude : null
+    editedSendPoint ? editedSendPoint.logitude : null
   );
 
   const [newLatitude, setNewLatitude] = useState<number | null>(
     editedSendPoint ? editedSendPoint.latitude : null
   );
   const [newLongitude, setNewLongitude] = useState<number | null>(
-    editedSendPoint ? editedSendPoint.longitude : null
+    editedSendPoint ? editedSendPoint.logitude : null
   );
 
   const [showDialog, setShowDialog] = useState<boolean>(false);
@@ -69,7 +69,7 @@ const MapModal = ({
   };
 
   const submitSendPoint = (data: CreateSendPointCommand) => {
-    data.longitude = longitude ?? 1;
+    data.logitude = longitude ?? 1;
     data.latitude = latitude ?? 1;
 
     if (editedSendPoint) {
@@ -95,6 +95,13 @@ const MapModal = ({
     setNewLongitude(null);
     handleClose();
   };
+
+  useEffect(() => {
+    if (editedSendPoint) {
+      setLatitude(editedSendPoint.latitude);
+      setLongitude(editedSendPoint.logitude);
+    }
+  }, [editedSendPoint]);
 
   return (
     <Modal open={open} onClose={onClose}>

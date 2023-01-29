@@ -7,5 +7,5 @@ export interface SendPoint {
     buildingNumber: string;
     isActive: boolean;
     latitude: number;
-    longitude: number;
+    logitude: number;
 }

@@ -1,128 +1,187 @@
-import {
-  EditOutlined,
-  DeleteOutlineOutlined,
-  Add,
-  Remove,
-} from "@mui/icons-material";
-import {
-  Grid,
-  Card,
-  CardMedia,
-  CardContent,
-  Typography,
-  CardActions,
-  Button,
-  IconButton,
-  ButtonGroup,
-} from "@mui/material";
-import React, { useState } from "react";
+import { Add } from "@mui/icons-material";
+import { Grid, Button, Typography } from "@mui/material";
+import React, { useCallback, useEffect, useState } from "react";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGridTranslations } from "../MUI/DataGridTranslations";
+import LoadingScreen from "../Common/LoadingScreen";
+import { TableToolbar } from "../MUI/TableToolbar";
 import ConfirmationDialog from "../Common/ConfirmationDialog";
-import OrderModal from "../Components/OrderModal";
+import { Product } from "../API/Models/Product/Product";
+import { deleteProduct, getProducts } from "../API/Endpoints/Product";
+import { ProductQuery } from "../API/Models/Product/ProductQuery";
 import ProductModal from "../Components/ProductModal";
-import "../SCSS/Products.scss";
 
 const Products = () => {
+  const [openModal, setOpenModal] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
-  const [openProductModal, setOpenProductModal] = useState<boolean>(false);
-  const [openOrderModal, setOpenOrderModal] = useState<boolean>(false);
-  const [count, setCount] = useState<number>(0);
+
+  const [pageIndex, setPageIndex] = useState<number>(0);
+  const [itemCount, setItemCount] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(20);
+
+  const [refresh, setRefresh] = useState<boolean>(false);
+  const [products, setProducts] = useState<Product[]>();
+  const [editedProduct, setEditedProduct] = useState<Product | null>(
+    null
+  );
+
+  const getProductsFromApi = useCallback(() => {
+    const productQuery: ProductQuery = {
+      pageNumber: pageIndex + 1,
+      pageSize: pageSize,
+    };
+
+    getProducts(productQuery).then((data) => {
+      setRefresh(false);
+      setProducts(data.items);
+      setItemCount(data.totalCount);
+    });
+  }, [pageIndex, pageSize]);
+
+  useEffect(() => {
+    getProductsFromApi();
+  }, [getProductsFromApi, pageIndex]);
+
+  useEffect(() => {
+    if (refresh) {
+      getProductsFromApi();
+    }
+  }, [getProductsFromApi, refresh]);
+
+  const handleDelete = () => {
+    if (editedProduct) {
+      deleteProduct(editedProduct.id).then(() => {
+        getProductsFromApi();
+        setEditedProduct(null);
+      });
+    }
+  };
+
+  const columns: GridColDef[] = [
+    { field: "id", headerName: "Id", type: "number", flex: 0.5 },
+    {
+      field: "name",
+      headerName: "Nazwa",
+      flex: 4,
+    },
+    {
+      field: "code",
+      headerName: "Kod",
+      flex: 2,
+    },
+    {
+      field: "price",
+      headerName: "Price",
+      flex: 2,
+      type: 'number'
+    },
+    {
+      field: "isActive",
+      headerName: "Aktywny",
+      flex: 1.5,
+      renderCell: (row) => {
+        return (
+          <Typography
+            variant="body1"
+            component="span"
+            color={row.value ? "green" : "error"}
+          >
+            {row.value ? "Aktywny" : "Nieaktywny"}
+          </Typography>
+        );
+      },
+    },
+    {
+      field: "Edycja",
+      flex: 1.2,
+      renderCell: (row) => {
+        return (
+          <Button
+            variant="contained"
+            onClick={() => {
+              setEditedProduct(
+                products?.find((item) => item.id === row.id) ?? null
+              );
+              setOpenModal(true);
+            }}
+          >
+            Edytuj
+          </Button>
+        );
+      },
+    },
+    {
+      field: "Usuwanie",
+      flex: 1.2,
+      renderCell: (row) => {
+        return (
+          <Button
+            color="error"
+            variant="contained"
+            onClick={() => {
+              setEditedProduct(
+                products?.find((item) => item.id === row.id) ?? null
+              );
+              setOpenDialog(true);
+            }}
+          >
+            Usuń
+          </Button>
+        );
+      },
+    },
+  ];
+
+  if (!products) {
+    return <LoadingScreen />;
+  }
 
   return (
     <>
       <Grid justifyContent="flex-end" container marginBottom={2}>
-        <Button endIcon={<Add />} onClick={() => setOpenProductModal(true)}>
+        <Button
+          variant="contained"
+          endIcon={<Add />}
+          onClick={() => setOpenModal(true)}
+        >
           Dodaj produkt
         </Button>
       </Grid>
-      <Grid container spacing={2}>
-        <Grid item key={"1"}>
-          <Card sx={{ width: 350 }}>
-            <CardMedia
-              component="img"
-              height="140"
-              width="auto"
-              image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2jWd_yGETuMN0NI9QjCydgFMOteG4em2Baw&usqp=CAU"
-              alt="coal"
+      <div style={{ height: 400, width: "100%" }}>
+        <div style={{ display: "flex", height: "100%" }}>
+          <div style={{ flexGrow: 1 }}>
+            <DataGrid
+              rows={products}
+              columns={columns}
+              disableSelectionOnClick
+              experimentalFeatures={{ newEditingApi: true }}
+              localeText={DataGridTranslations}
+              rowsPerPageOptions={[10, 20, 50, 100, 200]}
+              components={{
+                Toolbar: TableToolbar,
+              }}
+              pageSize={pageSize}
+              page={pageIndex}
+              rowCount={itemCount}
+              onPageChange={(page) => setPageIndex(page)}
+              onPageSizeChange={(pageSize) => setPageSize(pageSize)}
             />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
-                Węgiel
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                węgiel super się pali
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Grid container spacing={1} justifyContent="space-between">
-                <div>
-                  <Button size="small" onClick={() => setOpenOrderModal(true)}>
-                    Dodaj do koszyka
-                  </Button>
-                  <ButtonGroup>
-                    <Button
-                      onClick={() => {
-                        setCount(Math.max(count - 1, 0));
-                      }}
-                    >
-                      <Remove fontSize="small" />
-                    </Button>
-                    <Button className="count-button">
-                      <input
-                        value={count}
-                        onChange={(e) => {
-                          setCount(parseInt(e.target.value));
-                        }}
-                        className="count"
-                        type="tel"
-                      />
-                    </Button>
-                    <Button
-                      variant="contained"
-                      onClick={() => {
-                        setCount(count + 1);
-                      }}
-                    >
-                      <Add fontSize="small" />
-                    </Button>
-                  </ButtonGroup>
-                </div>
-                <div>
-                  <IconButton
-                    onClick={() => {
-                      setOpenProductModal(true);
-                    }}
-                  >
-                    <EditOutlined />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => {
-                      setOpenDialog(true);
-                    }}
-                  >
-                    <DeleteOutlineOutlined />
-                  </IconButton>
-                </div>
-              </Grid>
-            </CardActions>
-          </Card>
-        </Grid>
-      </Grid>
+          </div>
+        </div>
+      </div>
+      <ProductModal
+        handleClose={() => {
+          setEditedProduct(null);
+          setOpenModal(false);
+        }}
+        open={openModal}
+        setRefresh={setRefresh}
+        editedProduct={editedProduct}
+      />
       <ConfirmationDialog
         open={openDialog}
         handleClose={() => setOpenDialog(false)}
-        handleConfirm={() => undefined}
-      />
-      <ProductModal
-        handleClose={() => {
-          setOpenProductModal(false);
-        }}
-        open={openProductModal}
-      />
-      <OrderModal
-        handleClose={() => {
-          setOpenOrderModal(false);
-        }}
-        open={openOrderModal}
+        handleConfirm={handleDelete}
       />
     </>
   );

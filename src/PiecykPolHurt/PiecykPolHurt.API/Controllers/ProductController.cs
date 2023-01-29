@@ -14,10 +14,12 @@ namespace PiecykPolHurt.API.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
+        private readonly IUser _user;
 
-        public ProductController(IProductService productService)
+        public ProductController(IProductService productService, IUser user)
         {
             _productService = productService;
+            _user = user;
         }
 
         [HttpGet]
@@ -94,8 +96,7 @@ namespace PiecykPolHurt.API.Controllers
         {
             try
             {
-                var email = GetUserEmail();
-                var result = await _productService.CreateProductAsync(command, email);
+                var result = await _productService.CreateProductAsync(command, _user.Email);
                 if (!result)
                 {
                     return Conflict();
@@ -116,8 +117,7 @@ namespace PiecykPolHurt.API.Controllers
         {
             try
             {
-                var email = GetUserEmail();
-                var result = await _productService.UpdateProductAsync(command, email);
+                var result = await _productService.UpdateProductAsync(command, _user.Email);
                 if (!result)
                 {
                     return Conflict();
@@ -150,7 +150,5 @@ namespace PiecykPolHurt.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
-        private string GetUserEmail() => User.Claims.FirstOrDefault(c => c.Type == Claims.Email)?.Value;
     }
 }

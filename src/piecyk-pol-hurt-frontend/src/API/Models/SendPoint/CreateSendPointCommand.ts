@@ -5,6 +5,6 @@ export interface CreateSendPointCommand {
     street: string;
     buildingNumber: string;
     latitude: number;
-    longitude: number;
+    logitude: number;
     isActive: boolean;
 }
