@@ -29,6 +29,7 @@ namespace PiecykPolHurt.DataLayer
             builder.Entity<Order>()
                 .HasMany(x => x.Lines)
                 .WithOne(x => x.Order)
+                .HasForeignKey(x => x.OrderId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<SendPoint>()
@@ -46,6 +47,7 @@ namespace PiecykPolHurt.DataLayer
             builder.Entity<Product>()
                 .HasMany(x => x.Lines)
                 .WithOne(x => x.Product)
+                .HasForeignKey(x => x.ProductId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Product>()
