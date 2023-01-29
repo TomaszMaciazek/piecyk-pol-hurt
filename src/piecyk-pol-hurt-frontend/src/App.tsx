@@ -1,11 +1,13 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navigation from "./Components/Navigation";
-import Products from "./Pages/Products";
+import Shop from "./Pages/Shop";
 import Orders from "./Pages/Orders";
 import Locations from "./Pages/Locations";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import Products from "./Pages/Products";
 
 const App = () => {
   document.title = "Piecyk Pol Hurt";
@@ -41,10 +43,11 @@ const App = () => {
       <Navigation />
       <main>
         <Routes>
-          <Route path="/" element={<Products />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/orders" element={<Orders />} />
-          <Route path="/locations" element={<Locations />} />
+          <Route path="/" element={<Shop />} />
+          <Route path="/sklep" element={<Shop />} />
+          <Route path="/produkty" element={<Products />} />
+          <Route path="/zamówienia" element={<Orders />} />
+          <Route path="/lokalizacje" element={<Locations />} />
         </Routes>
       </main>
     </BrowserRouter>

@@ -1,6 +1,6 @@
 import { SortOption } from "../../../Constants/Enums/SortOption";
 
-export interface SendPointQuery {
+export interface ProductQuery {
     code?: string;
     name?: string;
     isActive?: boolean;

@@ -1,8 +1,28 @@
-import { Client } from '../Client/Client';
+import { Client } from "../Client/Client";
+import { PaginatedList } from "../Models/PaginatedList";
+import { CreateProductCommand } from "../Models/Product/CreateProductCommand";
+import { Product } from "../Models/Product/Product";
+import { ProductQuery } from "../Models/Product/ProductQuery";
+import { UpdateProductCommand } from "../Models/Product/UpdateProductCommand";
 
-const controllerName = 'Product';
+const controllerName = "Product";
 
-const getProducts = async (): Promise<string[]> => {
-  return Client('GET', `${controllerName}/all`);
+const getProducts = async (
+  params: ProductQuery
+): Promise<PaginatedList<Product>> => {
+  return Client("GET", controllerName, {}, params);
 };
-export { getProducts };
+
+const addProduct = async (body: CreateProductCommand): Promise<null> => {
+  return Client("POST", controllerName, { body });
+};
+
+const updateProduct = async (body: UpdateProductCommand): Promise<null> => {
+  return Client("PUT", controllerName, { body });
+};
+
+const deleteProduct = async (id: number): Promise<null> => {
+  return Client("DELETE", `${controllerName}/${id}`);
+};
+
+export { getProducts, addProduct, deleteProduct, updateProduct };

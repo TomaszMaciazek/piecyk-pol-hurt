@@ -6,6 +6,6 @@ export interface UpdateSendPointCommand {
     street: string;
     buildingNumber: string;
     latitude: number;
-    longitude: number;
+    logitude: number;
     isActive: boolean;
 }

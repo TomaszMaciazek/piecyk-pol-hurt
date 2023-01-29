@@ -1,81 +1,88 @@
-import { Modal, Box, TextField, Button } from "@mui/material";
-import React, { useState } from "react";
+import { Modal, Box, Button } from "@mui/material";
+import React from "react";
+import {
+  FormContainer,
+  TextFieldElement,
+  CheckboxElement,
+} from "react-hook-form-mui";
+import { addProduct, updateProduct } from "../API/Endpoints/Product";
+import { CreateProductCommand } from "../API/Models/Product/CreateProductCommand";
+import { Product } from "../API/Models/Product/Product";
+import { UpdateProductCommand } from "../API/Models/Product/UpdateProductCommand";
 import { ModalStyle } from "../Styles/ModalStyles";
 
 interface IProductModal {
   open: boolean;
   handleClose: () => void;
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+  editedProduct: Product | null;
 }
 
 const ProductModal = ({
   open,
   handleClose,
+  setRefresh,
+  editedProduct,
 }: IProductModal) => {
-  const [name, setName] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [price, setPrice] = useState<number>(50);
-  const [imageUrl, setImageUrl] = useState<string>("");
+  const sumbitProduct = (data: CreateProductCommand) => {
+    if (editedProduct) {
+      const request = data as UpdateProductCommand;
+      request.id = editedProduct.id;
+      
+      updateProduct(request).then(() => {
+        setRefresh(true);
+        onClose();
+      });
+    } else {
+      addProduct(data).then(() => {
+        setRefresh(true);
+        onClose();
+      });
+    }
+  };
 
   const onClose = () => {
-    setName("");
-    setPrice(50);
-    setDescription("");
-    setImageUrl("");
     handleClose();
   };
 
   return (
-    <Modal
-      open={open}
-      onClose={onClose}
-      aria-labelledby="parent-modal-title"
-      aria-describedby="parent-modal-description"
-    >
-      <Box sx={{ ...ModalStyle, width: 400, height: 480 }}>
-        <h2 id="parent-modal-title">
-          {true ? "Edycja" : "Dodaj usługę"}
-        </h2>
-        <Box
-          component="form"
-          sx={{
-            "& .MuiTextField-root": { mb: 2, width: "100%" },
+    <Modal open={open} onClose={onClose}>
+      <Box sx={{ ...ModalStyle, width: 450, height: 600 }}>
+        <h2>{editedProduct ? "Edytuj produkt" : "Dodaj produkt"}</h2>
+        <FormContainer
+          onSuccess={sumbitProduct}
+          defaultValues={{
+            code: editedProduct ? editedProduct.code : "",
+            isActive: editedProduct ? editedProduct.isActive : false,
+            name: editedProduct ? editedProduct.name : "",
+            description: editedProduct ? editedProduct.description : "",
+            imageUrl: editedProduct ? editedProduct.description : "",
+            price: editedProduct ? editedProduct.price : undefined,
           }}
-          noValidate
-          autoComplete="off"
         >
-          <TextField
-            required
-            error={false}
-            label="Nazwa usługi"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <TextField
-            error={false}
-            label="Opis"
-            multiline
-            rows={4}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-          <TextField
-            error={false}
-            label="Cena"
-            InputProps={{ inputProps: { min: 1, step: 1 } }}
-            type="number"
-            value={price}
-            onChange={(e) => setPrice(parseInt(e.target.value))}
-          />
-          <TextField
-            error={false}
-            label="Adres Url"
-            value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
-          />
-          <Button variant="contained" sx={{ mt: 2 }} onClick={() => undefined}>
-            Zapisz
-          </Button>
-        </Box>
+          <Box
+            sx={{
+              "& .MuiTextField-root": { mb: 2, width: "100%" },
+            }}
+          >
+            <TextFieldElement name="name" label="Nazwa" />
+            <TextFieldElement name="code" label="Kod" />
+            <TextFieldElement
+              name="description"
+              label="Opis"
+              multiline
+              rows={4}
+            />
+            <TextFieldElement name="price" label="Cena" type="number" />
+            <TextFieldElement name="imageUrl" label="Adres URL zdjęcia" />
+            <div>
+              <CheckboxElement name="isActive" label="Aktywuj punkt odbioru" />
+            </div>
+            <Button variant="contained" type="submit" sx={{ mt: 1 }}>
+              Zapisz
+            </Button>
+          </Box>
+        </FormContainer>
       </Box>
     </Modal>
   );
