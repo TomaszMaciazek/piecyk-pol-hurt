@@ -22,6 +22,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { useSelector } from "react-redux";
+import { RootState } from "../Redux/store";
 
 const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
   '& .MuiBadge-badge': {
@@ -33,8 +35,8 @@ const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
 }));
 
 const Navigation = () => {
-  const pages = ["Sklep", "Produkty", "Zamówienia", "Lokacje"];
-  const links = ["sklep", "produkty", "zamowienia", "lokalizacje"];
+  const pages = ["Sklep", "Produkty", "Lokacje"];
+  const links = ["sklep", "produkty", "lokalizacje"];
   const [drawerOpen, setDrawerOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -43,6 +45,7 @@ const Navigation = () => {
   };
 
   const { isAuthenticated, logout, loginWithRedirect } = useAuth0();
+  const orderLines = useSelector((state: RootState) => state.shoppingCart.orderLines);
 
   const authenticateAction = () => {
     if (isAuthenticated) {
@@ -141,8 +144,8 @@ const Navigation = () => {
                 </Button>
               ))}
             </Box>
-            <IconButton size="large" sx={{mr: 2}}>
-              <StyledBadge badgeContent={4} color="info">
+            <IconButton size="large" sx={{mr: 2}} onClick={() => navigate("/koszyk")}>
+              <StyledBadge badgeContent={orderLines.length} color="info">
                 <ShoppingCartIcon sx={{ color: "white" }} />
               </StyledBadge>
             </IconButton>

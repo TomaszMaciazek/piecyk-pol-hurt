@@ -1,16 +1,17 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { PERSIST, persistReducer } from 'redux-persist';
-import persistStore from 'redux-persist/es/persistStore';
-import storage from 'redux-persist/lib/storage';
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import { PERSIST, persistReducer } from "redux-persist";
+import persistStore from "redux-persist/es/persistStore";
+import storage from "redux-persist/lib/storage";
+import ShoppingCartReducer from "./Reducers/ShoppingCartReducer";
 
 const reducers = combineReducers({
-  
+  shoppingCart: ShoppingCartReducer,
 });
 
 const persistConfig = {
-  key: 'root',
+  key: "root",
   version: 1,
-  storage
+  storage,
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);
@@ -21,9 +22,9 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: [PERSIST]
-      }
-    })
+        ignoredActions: [PERSIST],
+      },
+    }),
 });
 
 export const persistor = persistStore(store);
