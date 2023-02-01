@@ -1,31 +1,29 @@
-from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
+from google.protobuf.internal import containers as _containers
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
-from typing import ClassVar as _ClassVar, Mapping as _Mapping, Optional as _Optional, Union as _Union
+from typing import ClassVar as _ClassVar, Iterable as _Iterable, Mapping as _Mapping, Optional as _Optional, Union as _Union
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
-class ProductType(_message.Message):
-    __slots__ = ["productType"]
-    class PRODUCT_TYPE(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
-        __slots__ = []
-    GROSZEK: ProductType.PRODUCT_TYPE
-    KOSTKA: ProductType.PRODUCT_TYPE
-    MIAL: ProductType.PRODUCT_TYPE
-    ORZECH: ProductType.PRODUCT_TYPE
+class Product(_message.Message):
+    __slots__ = ["date", "price", "productType", "quantity", "sendPoint"]
+    DATE_FIELD_NUMBER: _ClassVar[int]
+    PRICE_FIELD_NUMBER: _ClassVar[int]
     PRODUCTTYPE_FIELD_NUMBER: _ClassVar[int]
-    productType: ProductType.PRODUCT_TYPE
-    def __init__(self, productType: _Optional[_Union[ProductType.PRODUCT_TYPE, str]] = ...) -> None: ...
+    QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    SENDPOINT_FIELD_NUMBER: _ClassVar[int]
+    date: str
+    price: float
+    productType: str
+    quantity: int
+    sendPoint: str
+    def __init__(self, productType: _Optional[str] = ..., quantity: _Optional[int] = ..., sendPoint: _Optional[str] = ..., price: _Optional[float] = ..., date: _Optional[str] = ...) -> None: ...
 
 class ProductUpdateRequest(_message.Message):
-    __slots__ = ["branch", "quantity", "type"]
-    BRANCH_FIELD_NUMBER: _ClassVar[int]
-    QUANTITY_FIELD_NUMBER: _ClassVar[int]
-    TYPE_FIELD_NUMBER: _ClassVar[int]
-    branch: str
-    quantity: int
-    type: ProductType
-    def __init__(self, type: _Optional[_Union[ProductType, _Mapping]] = ..., quantity: _Optional[int] = ..., branch: _Optional[str] = ...) -> None: ...
+    __slots__ = ["productUpdate"]
+    PRODUCTUPDATE_FIELD_NUMBER: _ClassVar[int]
+    productUpdate: _containers.RepeatedCompositeFieldContainer[Product]
+    def __init__(self, productUpdate: _Optional[_Iterable[_Union[Product, _Mapping]]] = ...) -> None: ...
 
 class ProductUpdateResponse(_message.Message):
     __slots__ = ["message"]
