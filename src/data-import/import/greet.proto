@@ -12,9 +12,7 @@ service ProductUpdater {
 
 // The request message containing the user's name.
 message ProductUpdateRequest {
-  ProductType type = 1;
-  int32 quantity = 2;
-  string branch = 3;
+  repeated Product productUpdate= 1;
 }
 
 // The response message containing the greetings.
@@ -22,12 +20,10 @@ message ProductUpdateResponse {
   string message = 1;
 }
 
-message ProductType {
-  enum PRODUCT_TYPE {
-    ORZECH = 0;
-    KOSTKA = 1;
-    GROSZEK = 2;
-    MIAL = 3;
-  }
-  PRODUCT_TYPE productType = 1;
+message Product{
+  string productType = 1;
+  int32 quantity = 2;
+  string sendPoint = 3;
+  float price = 4;
+  string date = 5;
 }

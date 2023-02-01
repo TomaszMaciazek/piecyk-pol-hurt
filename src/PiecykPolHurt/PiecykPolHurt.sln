@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PiecykPolHurt.Mappings", "P
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PiecykPolHurt.Validation", "PiecykPolHurt.Validation\PiecykPolHurt.Validation.csproj", "{16B9AC47-9D7D-41D7-9493-284320CE598A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PiecykPolHurt.DataImport", "PiecykPolHurt.DataImport\PiecykPolHurt.DataImport.csproj", "{14901632-F6E8-4778-B12F-0848CE9E6911}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{16B9AC47-9D7D-41D7-9493-284320CE598A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16B9AC47-9D7D-41D7-9493-284320CE598A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16B9AC47-9D7D-41D7-9493-284320CE598A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14901632-F6E8-4778-B12F-0848CE9E6911}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14901632-F6E8-4778-B12F-0848CE9E6911}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14901632-F6E8-4778-B12F-0848CE9E6911}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14901632-F6E8-4778-B12F-0848CE9E6911}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
