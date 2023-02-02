@@ -16,7 +16,7 @@ namespace PiecykPolHurt.Model.Entities
         [Required]
         public OrderStatus Status { get; set; }
 
-        public ICollection<OrderLines> Lines { get; set; }
+        public ICollection<OrderLine> Lines { get; set; }
 
         [Required]
         public int SendPointId { get; set; }
