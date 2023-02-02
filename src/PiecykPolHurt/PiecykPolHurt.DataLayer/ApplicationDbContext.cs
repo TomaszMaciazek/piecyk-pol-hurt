@@ -11,7 +11,7 @@ namespace PiecykPolHurt.DataLayer
     public class ApplicationDbContext : DbContext
     {
         public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderLines> OrdersLines { get; set; }
+        public DbSet<OrderLine> OrdersLines { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<SendPoint> SendPoints { get; set; }
         public DbSet<ProductSendPoint> ProductSendPoints { get; set; }
