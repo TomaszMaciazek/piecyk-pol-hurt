@@ -21,13 +21,24 @@ public class AppUser : IUser
     }
 
     public IEnumerable<string> Permissions
+    {
+        get
         {
-            get
-            {
-                var permissions =
-                    _accessor.HttpContext?.User?.Claims?.Where(c => c.Type == Claims.Permissions);
+            var permissions =
+                _accessor.HttpContext?.User?.Claims?.Where(c => c.Type == Claims.Permissions);
 
-                return permissions.Select(x => x.Value);
-            }
+            return permissions.Select(x => x.Value);
         }
     }
+
+    public int? Id
+    {
+        get
+        {
+            var userId =
+                _accessor.HttpContext?.User?.Claims?.FirstOrDefault(c => c.Type == Claims.UserId);
+
+            return userId != null ? Int32.Parse(userId.Value) : null;
+        }
+    }
+}
