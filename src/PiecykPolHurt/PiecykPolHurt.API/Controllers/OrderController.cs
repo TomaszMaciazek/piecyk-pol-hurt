@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PiecykPolHurt.API.Authorization;
 using PiecykPolHurt.ApplicationLogic.Result;
 using PiecykPolHurt.ApplicationLogic.Services;
 using PiecykPolHurt.Model.Commands;
-using PiecykPolHurt.Model.Dto;
 using PiecykPolHurt.Model.Dto.Order;
 using PiecykPolHurt.Model.Queries;
 
@@ -42,7 +40,7 @@ namespace PiecykPolHurt.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<OrderDto>> GetProduct([FromRoute] int id)
+        public async Task<ActionResult<OrderDto>> GetOrder([FromRoute] int id)
         {
             try
             {
