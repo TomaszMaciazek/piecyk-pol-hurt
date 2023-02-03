@@ -6,7 +6,7 @@ namespace PiecykPolHurt.DataLayer.Repositories
 {
     public interface ISendPointRepository : IRepository<SendPoint> {
         Task<bool> WasSendPointUsedInOrder(int id);
-        Task<SendPoint> GetByCode(String code);
+        Task<SendPoint> GetByCode(string code);
     }
 
     public class SendPointRepository : BaseRepository<SendPoint>, ISendPointRepository
@@ -18,7 +18,7 @@ namespace PiecykPolHurt.DataLayer.Repositories
         public async Task<bool> WasSendPointUsedInOrder(int id)
             =>  await _context.Orders.AnyAsync(x => x.SendPointId == id);
 
-        public async Task<SendPoint> GetByCode(String code)
+        public async Task<SendPoint> GetByCode(string code)
             => await _context.SendPoints.FirstAsync(x => x.Code.Equals(code));
     }
 }

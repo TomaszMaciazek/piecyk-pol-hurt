@@ -25,10 +25,9 @@ namespace PiecykPolHurt.ApplicationLogic.Services
         // Task<PaginatedList<ProductListItemDto>> GetProductsAsync(ProductQuery query);
         Task<bool> UpdateProductSendPointAsync(UpdateProductSendpointCommand command);
 
-        CreateProductSendPointCommand GetCreateProductSendPointCommand(String productCode,
-            String sendpointCode);
+        Task<CreateProductSendPointCommand> GetCreateProductSendPointCommand(string productCode, string sendpointCode);
 
-        bool MakeUpdate(IList<ProductSendPointUpdateDto> updates);
+        Task<bool> MakeUpdate(IList<ProductSendPointUpdateDto> updates);
 
     }
 
@@ -58,19 +57,10 @@ namespace PiecykPolHurt.ApplicationLogic.Services
         public async Task<bool> CreateProductSendPointAsync(CreateProductSendPointCommand command)
         {
             // var validationResult = await _createValidator.ValidateAsync(command);
-            var products = await _productService.GetAllProductsAsync();
-            var sendPoints = await _sendPointService.GetAllSendPointsAsync();
-            if (products.All(product => product.Id != _mapper.Map<SimpleProductDto>(command.Product).Id))
-            {
-                return false;
-            }
-            if (sendPoints.All(sendPoint => sendPoint.Id != _mapper.Map<SendPoint>(command.SendPoint).Id))
-            {
-                return false;
-            }
+
             // if (validationResult.IsValid)
             // {
-                var productSendPoint = _mapper.Map<ProductSendPoint>(command);
+            var productSendPoint = _mapper.Map<ProductSendPoint>(command);
                 _unitOfWork.ProductSendPointRepository.Add(productSendPoint);
                 await _unitOfWork.SaveChangesAsync();
                 return true;
@@ -78,14 +68,24 @@ namespace PiecykPolHurt.ApplicationLogic.Services
             return false;
         }
 
-        public CreateProductSendPointCommand GetCreateProductSendPointCommand(String productCode, String sendpointCode)
+        public async Task<CreateProductSendPointCommand> GetCreateProductSendPointCommand(string productCode, string sendpointCode)
         {
-            var product = _productService.GetProductByCode(productCode);
-            var sendPoint = _sendPointService.GetSendPointByCodeAsync(sendpointCode);
-            CreateProductSendPointCommand createProductSendPointCommand = new CreateProductSendPointCommand();
-            createProductSendPointCommand.Product = product.Result;
-            createProductSendPointCommand.SendPoint = sendPoint.Result;
-            return createProductSendPointCommand;
+            var product = await _unitOfWork.ProductRepository.GetByCode(productCode);
+            var sendPoint = await _unitOfWork.SendPointRepository.GetByCode(sendpointCode);
+            if(product == null)
+            {
+                throw new Exception("Product is null");
+            }
+            if(sendPoint == null)
+            {
+                throw new Exception("SendPoint is null");
+            }
+
+            return new CreateProductSendPointCommand
+            {
+                ProductId = product.Id,
+                SendPointId = sendPoint.Id,
+            };
         }
 
         public async Task<IList<ProductSendPoint>> GetAllProductSendPointsAsync()
@@ -97,26 +97,31 @@ namespace PiecykPolHurt.ApplicationLogic.Services
                 .ToListAsync();
         }
 
-        public bool MakeUpdate(IList<ProductSendPointUpdateDto> updates)
+        public async Task<bool> MakeUpdate(IList<ProductSendPointUpdateDto> updates)
         {
-            var productSendPoints = _unitOfWork.ProductSendPointRepository.GetAll().AsNoTracking();
-            var productSendPointsList = productSendPoints.ToList();
             foreach (var update in updates)
             {
-                var productSendPoint = productSendPoints.FirstOrDefault(prodSendPoint => 
-                    prodSendPoint.Product.Code.Equals(update.ProductCode)
-                        && prodSendPoint.SendPoint.Code.Equals(update.SendPointCode));
-                if (productSendPoint != null)
+                //Jeśli istnieje jakikolwiek ProductSendPoint z takim produktem i send pointem
+                if (
+                    await _unitOfWork.ProductSendPointRepository
+                    .GetAll()
+                    .Include(x=> x.Product)
+                    .Include(x => x.SendPoint)
+                    .AnyAsync(prodSendPoint =>
+                        prodSendPoint.Product.Code.Equals(update.ProductCode)
+                        && prodSendPoint.SendPoint.Code.Equals(update.SendPointCode)
+                        )
+                    )
                 {
                     return false;
                 }
                 else
                 {
-                    CreateProductSendPointCommand command =
-                        GetCreateProductSendPointCommand(update.ProductCode, update.SendPointCode);
-                    if (CreateProductSendPointAsync(command).Result == false) return false;
+                    CreateProductSendPointCommand command = await GetCreateProductSendPointCommand(update.ProductCode, update.SendPointCode);
+                    return await CreateProductSendPointAsync(command);
                 }
             }
+
             return true;
         }
 

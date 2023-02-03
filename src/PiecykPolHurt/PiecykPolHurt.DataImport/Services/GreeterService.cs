@@ -26,36 +26,49 @@ public class ProductUpdaterService : ProductUpdater.ProductUpdaterBase
         _productSendPointService = productSendPointService;
     }
 
-    public override Task<ProductUpdateResponse> UpdateProduct(ProductUpdateRequest request,
+    public override async Task<ProductUpdateResponse> UpdateProduct(ProductUpdateRequest request,
         ServerCallContext context)
     {
         var parsedDate = DateTime.Parse(request.ProductUpdate[0].Date);
-        var updateDtos = new List<ProductSendPointUpdateDto>();
-        // var updateRequest = request.ProductUpdate.ToList();
-        foreach (var productUdpate in request.ProductUpdate)
-        {
-            updateDtos.Add(new ProductSendPointUpdateDto(
+        var updateDtos = request.ProductUpdate.Select(productUdpate => new ProductSendPointUpdateDto(
                 productUdpate.ProductType,
                 productUdpate.SendPoint,
                 productUdpate.Quantity,
                 DateTime.Parse(productUdpate.Date),
-                Convert.ToDecimal(productUdpate.Price)));
-        }
+                Convert.ToDecimal(productUdpate.Price))).ToList();
+        // var updateRequest = request.ProductUpdate.ToList();
 
-        bool updated = _productSendPointService.MakeUpdate(updateDtos);
+        //zamiana na ten select wy¿ej
+        //foreach (var productUdpate in request.ProductUpdate)
+        //{
+        //    updateDtos.Add(new ProductSendPointUpdateDto(
+        //        productUdpate.ProductType,
+        //        productUdpate.SendPoint,
+        //        productUdpate.Quantity,
+        //        DateTime.Parse(productUdpate.Date),
+        //        Convert.ToDecimal(productUdpate.Price)));
+        //}
+
+        bool updated = await _productSendPointService.MakeUpdate(updateDtos);
 
         // _logger.LogInformation("date: " + parsedDate);
         // ArrayList productUpdateList =
-            // CreateProductSendPointCommand createProductSendPointCommand =
-            //     _productSendPointService.GetCreateProductSendPointCommand()
-            
-            // List<ProductSendPoint> productSendpointsList =
-            //     await _productSendPointService.MakeUpdate(request.ProductUpdate); 
-        
-        return Task.FromResult(new ProductUpdateResponse
+        // CreateProductSendPointCommand createProductSendPointCommand =
+        //     _productSendPointService.GetCreateProductSendPointCommand()
+
+        // List<ProductSendPoint> productSendpointsList =
+        //     await _productSendPointService.MakeUpdate(request.ProductUpdate); 
+
+        //Tomek - jak return nie pyknie to spróbuj to bo nie wiem co to mia³o robiæ
+        //return await Task.FromResult(new ProductUpdateResponse
+        //{
+        //    Message = request.ProductUpdate.Count + " products stock updated: " + updated
+        //});
+
+        return new ProductUpdateResponse
         {
             Message = request.ProductUpdate.Count + " products stock updated: " + updated
-        });
+        };
     }
 
 }
