@@ -6,6 +6,7 @@ import {
   TextFieldElement,
 } from "react-hook-form-mui";
 import { MapContainer, TileLayer, useMapEvents } from "react-leaflet";
+import { toast } from "react-toastify";
 import { addSendPoint, updateSendPoint } from "../API/Endpoints/SendPoint";
 import { CreateSendPointCommand } from "../API/Models/SendPoint/CreateSendPointCommand";
 import { SendPoint } from "../API/Models/SendPoint/SendPoint";
@@ -76,15 +77,27 @@ const MapModal = ({
       const request = data as UpdateSendPointCommand;
       request.id = editedSendPoint.id;
 
-      updateSendPoint(request).then((data) => {
-        setRefresh(true);
-        onClose();
-      });
+      updateSendPoint(request)
+        .then((data) => {
+          setRefresh(true);
+          onClose();
+        })
+        .catch((reason) => {
+          if (reason.response.status === 409) {
+            toast.error("Kod musi być unikalny");
+          }
+        });
     } else {
-      addSendPoint(data).then(() => {
-        setRefresh(true);
-        onClose();
-      });
+      addSendPoint(data)
+        .then(() => {
+          setRefresh(true);
+          onClose();
+        })
+        .catch((reason) => {
+          if (reason.response.status === 409) {
+            toast.error("Kod musi być unikalny");
+          }
+        });
     }
   };
 
