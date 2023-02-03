@@ -68,8 +68,7 @@ namespace PiecykPolHurt.API.Controllers
         {
             try
             {
-                //zastąpić liczbę 1 id użytkownika
-                var result = await _orderService.CreateOrderAsync(command, 1, _user.Email);
+                var result = await _orderService.CreateOrderAsync(command, _user.Id ?? throw new Exception("empty user id"), _user.Email);
                 if (!result)
                 {
                     return Conflict();
