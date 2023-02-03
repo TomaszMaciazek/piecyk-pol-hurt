@@ -21,6 +21,7 @@ namespace PiecykPolHurt.ApplicationLogic.Services
         Task<PaginatedList<SendPointListItemDto>> GetSendPointsAsync(SendPointQuery query);
         Task<SendPointDto> GetSendPointByIdAsync(int id);
         Task<bool> UpdateSendPointAsync(UpdateSendPointCommand command);
+        Task<SendPoint> GetSendPointByCodeAsync(String code);
     }
 
     public class SendPointService : ISendPointService
@@ -89,7 +90,8 @@ namespace PiecykPolHurt.ApplicationLogic.Services
             .ProjectTo<SendPointDto>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync();
 
-
+        public async Task<SendPoint> GetSendPointByCodeAsync(String code)
+            => await _unitOfWork.SendPointRepository.GetByCode(code);
         public async Task<bool> CreateSendPointAsync(CreateSendPointCommand command)
         {
             var validationResult = await _createValidator.ValidateAsync(command);

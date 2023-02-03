@@ -12,6 +12,8 @@ namespace PiecykPolHurt.DataLayer.Common
         public ISendPointRepository SendPointRepository { get; private set; }
         public IDictionaryValueRepository DictionaryValueRepository { get; set; }
         public IReportDefinitionRepository ReportDefinitionRepository { get; set; }
+        public IProductSendPointRepository ProductSendPointRepository { get; set; }
+
         public string ConnectionString { get => 
                 !string.IsNullOrEmpty(_context.Database.GetConnectionString())
                 ? _context.Database.GetConnectionString()
@@ -24,6 +26,7 @@ namespace PiecykPolHurt.DataLayer.Common
             SendPointRepository = new SendPointRepository(_context);
             DictionaryValueRepository = new DictionaryValueRepository(_context);
             ReportDefinitionRepository = new ReportDefinitionRepository(_context);
+            ProductSendPointRepository = new ProductSendPointRepository(_context);
         }
 
         public async Task SaveChangesAsync()
