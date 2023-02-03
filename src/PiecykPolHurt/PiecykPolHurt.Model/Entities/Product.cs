@@ -15,7 +15,7 @@ namespace PiecykPolHurt.Model.Entities
         public string ImageUrl { get; set; }
         [Required]
         public bool IsActive { get; set; }
-        public ICollection<OrderLines> Lines { get; set; }
+        public ICollection<OrderLine> Lines { get; set; }
         public ICollection<ProductSendPoint> SendPoints { get; set; }
     }
 }

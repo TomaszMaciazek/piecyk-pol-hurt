@@ -4,11 +4,16 @@ import { CreateSendPointCommand } from "../Models/SendPoint/CreateSendPointComma
 import { SendPoint } from "../Models/SendPoint/SendPoint";
 import { SendPointQuery } from "../Models/SendPoint/SendPointQuery";
 import { UpdateSendPointCommand } from "../Models/SendPoint/UpdateSendPointCommand";
+import { SimpleSendPoint } from "./SimpleSendPoint";
 
 const controllerName = "SendPoint";
 
 const getSendPoints = async (params: SendPointQuery): Promise<PaginatedList<SendPoint>> => {
   return Client("GET", controllerName, {}, params);
+};
+
+const getActiveSendPoints = async (): Promise<SimpleSendPoint[]> => {
+  return Client("GET", `${controllerName}/active`);
 };
 
 const deleteSendPoint = async (id: number): Promise<boolean> => {
@@ -27,4 +32,4 @@ const addSendPoint = async (
   return Client("POST", controllerName, { body });
 };
 
-export { getSendPoints, deleteSendPoint, updateSendPoint, addSendPoint };
+export { getSendPoints, getActiveSendPoints, deleteSendPoint, updateSendPoint, addSendPoint };
