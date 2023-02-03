@@ -1,4 +1,8 @@
+using PiecykPolHurt.ApplicationLogic;
 using PiecykPolHurt.DataImport.Services;
+using PiecykPolHurt.DataLayer;
+using PiecykPolHurt.Mappings;
+using PiecykPolHurt.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +11,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddGrpc();
+builder.Services.AddDataLayer(builder.Configuration);
+builder.Services.AddMappings();
+builder.Services.AddValidation();
+builder.Services.AddLogic();
 
 var app = builder.Build();
 
