@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Net;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
@@ -23,9 +24,11 @@ namespace PiecykPolHurt.ApplicationLogic.Services
 
         // Task<ProductDto> GetProductByIdAsync(int id);
         // Task<PaginatedList<ProductListItemDto>> GetProductsAsync(ProductQuery query);
-        Task<bool> UpdateProductSendPointAsync(UpdateProductSendpointCommand command);
+        Task<bool> UpdateProductSendPointAsync(UpdateProductSendPointCommand command);
 
-        Task<CreateProductSendPointCommand> GetCreateProductSendPointCommand(string productCode, string sendpointCode);
+        Task<CreateProductSendPointCommand> GetCreateProductSendPointCommand(ProductSendPointUpdateDto updateDto);
+        
+        Task<UpdateProductSendPointCommand> GetUpdateProductSendPointCommand(ProductSendPointUpdateDto updateDto);
 
         Task<bool> MakeUpdate(IList<ProductSendPointUpdateDto> updates);
 
@@ -67,11 +70,11 @@ namespace PiecykPolHurt.ApplicationLogic.Services
             // }
             return false;
         }
-
-        public async Task<CreateProductSendPointCommand> GetCreateProductSendPointCommand(string productCode, string sendpointCode)
+        
+        public async Task<CreateProductSendPointCommand> GetCreateProductSendPointCommand(ProductSendPointUpdateDto updateDto)
         {
-            var product = await _unitOfWork.ProductRepository.GetByCode(productCode);
-            var sendPoint = await _unitOfWork.SendPointRepository.GetByCode(sendpointCode);
+            var product = await _unitOfWork.ProductRepository.GetByCode(updateDto.ProductCode);
+            var sendPoint = await _unitOfWork.SendPointRepository.GetByCode(updateDto.SendPointCode);
             if(product == null)
             {
                 throw new Exception("Product is null");
@@ -85,6 +88,8 @@ namespace PiecykPolHurt.ApplicationLogic.Services
             {
                 ProductId = product.Id,
                 SendPointId = sendPoint.Id,
+                AvailableQuantity = updateDto.AvailableQuantity,
+                ForDate = updateDto.ForDate,
             };
         }
 
@@ -113,19 +118,43 @@ namespace PiecykPolHurt.ApplicationLogic.Services
                         )
                     )
                 {
-                    return false;
+                    UpdateProductSendPointCommand command = await GetUpdateProductSendPointCommand(update);
+                    if (command.AvailableQuantity.Equals(update.AvailableQuantity)
+                        || command.ForDate.Equals(update.ForDate)) continue;
+                    if (await UpdateProductSendPointAsync(command) == false) return false;
                 }
                 else
                 {
-                    CreateProductSendPointCommand command = await GetCreateProductSendPointCommand(update.ProductCode, update.SendPointCode);
-                    return await CreateProductSendPointAsync(command);
+                    CreateProductSendPointCommand command = await GetCreateProductSendPointCommand(update);
+                    if (await CreateProductSendPointAsync(command) == false) return false;
                 }
             }
 
             return true;
         }
+        
+        public async Task<UpdateProductSendPointCommand> GetUpdateProductSendPointCommand(ProductSendPointUpdateDto updateDto)
+        {
+            ProductSendPoint productSendPoint =  await _unitOfWork.ProductSendPointRepository
+                .GetAll()
+                .Include(x => x.Product)
+                .Include(x => x.SendPoint)
+                .FirstOrDefaultAsync(prodSendPoint =>
+                    prodSendPoint.Product.Code.Equals(updateDto.ProductCode)
+                    && prodSendPoint.SendPoint.Code.Equals(updateDto.SendPointCode)
+                );
 
-        public async Task<bool> UpdateProductSendPointAsync(UpdateProductSendpointCommand command)
+            return new UpdateProductSendPointCommand
+            {
+                Id = productSendPoint.Id,
+                ProductId = productSendPoint.ProductId,
+                SendPointId = productSendPoint.SendPointId,
+                AvailableQuantity = updateDto.AvailableQuantity,
+                ForDate = updateDto.ForDate,
+            };
+        }
+
+        public async Task<bool> UpdateProductSendPointAsync(UpdateProductSendPointCommand command)
         {
             // var validationResult = await _updateValidator.ValidateAsync(command);
             // if (validationResult.IsValid)

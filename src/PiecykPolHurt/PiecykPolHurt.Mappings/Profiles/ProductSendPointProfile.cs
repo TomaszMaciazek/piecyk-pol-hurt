@@ -11,5 +11,9 @@ public class ProductSendPointProfile : Profile
         CreateMap<CreateProductSendPointCommand, ProductSendPoint>()
             .ForMember(dest => dest.Product, opt => opt.Ignore())
             .ForMember(dest => dest.SendPoint, opt => opt.Ignore());
+        
+        CreateMap<UpdateProductSendPointCommand, ProductSendPoint>()
+            .ForMember(dest => dest.Product, opt => opt.Ignore())
+            .ForMember(dest => dest.SendPoint, opt => opt.Ignore());
     }
 }
