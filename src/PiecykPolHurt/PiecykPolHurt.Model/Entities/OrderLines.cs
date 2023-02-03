@@ -2,7 +2,7 @@
 
 namespace PiecykPolHurt.Model.Entities
 {
-    public class OrderLines : BaseEntity
+    public class OrderLine : BaseEntity
     {
         [Required]
         public int OrderId { get; set; }

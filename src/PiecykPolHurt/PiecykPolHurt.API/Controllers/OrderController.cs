@@ -5,98 +5,71 @@ using PiecykPolHurt.ApplicationLogic.Result;
 using PiecykPolHurt.ApplicationLogic.Services;
 using PiecykPolHurt.Model.Commands;
 using PiecykPolHurt.Model.Dto;
+using PiecykPolHurt.Model.Dto.Order;
 using PiecykPolHurt.Model.Queries;
 
 namespace PiecykPolHurt.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductController : ControllerBase
+    public class OrderController : ControllerBase
     {
-        private readonly IProductService _productService;
+        private readonly IOrderService _orderService;
         private readonly IUser _user;
 
-        public ProductController(IProductService productService, IUser user)
+        public OrderController(IOrderService orderService, IUser user)
         {
-            _productService = productService;
+            _orderService = orderService;
             _user = user;
         }
 
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginatedList<ProductListItemDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginatedList<OrderListItemDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<PaginatedList<ProductListItemDto>>> GetSendPoints([FromQuery] ProductQuery query)
+        public async Task<ActionResult<PaginatedList<OrderListItemDto>>> GetOrders([FromQuery] OrderQuery query)
         {
             try
             {
-                return Ok(await _productService.GetProductsAsync(query));
+                return Ok(await _orderService.GetOrders(query));
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpGet("all")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<SimpleProductDto>))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<IList<SimpleSendPointDto>>> GetAllSendPoints()
-        {
-            try
-            {
-                return Ok(await _productService.GetAllProductsAsync(false));
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
-        }
-
-        [HttpGet("active")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<SimpleProductDto>))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<IList<SimpleSendPointDto>>> GetAllActiveSendPoints()
-        {
-            try
-            {
-                return Ok(await _productService.GetAllProductsAsync(true));
-            }
-            catch (Exception)
-            {
-                return BadRequest();
             }
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDto))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ProductDto>> GetProduct([FromRoute] int id)
+        public async Task<ActionResult<OrderDto>> GetProduct([FromRoute] int id)
         {
             try
             {
-                var sendPoint = await _productService.GetProductByIdAsync(id);
-                if (sendPoint == null)
+                var order = await _orderService.GetOrderById(id);
+                if (order == null)
                 {
                     return NotFound();
                 }
-                return Ok(sendPoint);
+                return Ok(order);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
+
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<ActionResult<bool>> AddProduct([FromBody] CreateProductCommand command)
+        public async Task<ActionResult<bool>> CreateOrder([FromBody] CreateOrderCommand command)
         {
             try
             {
-                var result = await _productService.CreateProductAsync(command, _user.Email);
+                //zastąpić liczbę 1 id użytkownika
+                var result = await _orderService.CreateOrderAsync(command, 1, _user.Email);
                 if (!result)
                 {
                     return Conflict();
@@ -109,15 +82,15 @@ namespace PiecykPolHurt.API.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("approve")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<ActionResult<bool>> UpdateProduct([FromBody] UpdateProductCommand command)
+        public async Task<ActionResult<bool>> ApproveOrde([FromBody] ApproveOrderCommand command)
         {
             try
             {
-                var result = await _productService.UpdateProductAsync(command, _user.Email);
+                var result = await _orderService.ApproveOrderAsync(command, _user.Email);
                 if (!result)
                 {
                     return Conflict();
@@ -130,15 +103,57 @@ namespace PiecykPolHurt.API.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpPatch("reject/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<ActionResult<bool>> DeleteProduct([FromRoute] int id)
+        public async Task<ActionResult<bool>> RejectOrder([FromQuery] int id)
         {
             try
             {
-                var result = await _productService.DeleteProductAsync(id);
+                var result = await _orderService.RejectOrderAsync(id, _user.Email);
+                if (!result)
+                {
+                    return Conflict();
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPatch("finish/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<ActionResult<bool>> FinishOrder([FromQuery] int id)
+        {
+            try
+            {
+                var result = await _orderService.FinishOrderAsync(id, _user.Email);
+                if (!result)
+                {
+                    return Conflict();
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPatch("cancel/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<ActionResult<bool>> CancelOrder([FromQuery] int id)
+        {
+            try
+            {
+                var result = await _orderService.CancelOrderAsync(id, _user.Email);
                 if (!result)
                 {
                     return Conflict();
