@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using PiecykPolHurt.DataLayer.Repositories;
+using System.Data;
 
 namespace PiecykPolHurt.DataLayer.Common
 {
@@ -33,5 +35,8 @@ namespace PiecykPolHurt.DataLayer.Common
         {
             await _context.SaveChangesAsync();
         }
+
+        public async Task<IDbContextTransaction> BeginTransactionAsync() => await _context.Database.BeginTransactionAsync();
+
     }
 }

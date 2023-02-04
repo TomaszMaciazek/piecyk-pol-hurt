@@ -91,32 +91,52 @@ namespace PiecykPolHurt.ApplicationLogic.Services
             var validationResult = await _createValidator.ValidateAsync(model);
             if (validationResult.IsValid)
             {
-                var order = new Order
+                using var transaction = await _unitOfWork.BeginTransactionAsync();
+                try
                 {
-                    BuyerId = userId,
-                    RequestedReceptionDate = model.RequestedReceptionDate,
-                    ReceptionDate = null,
-                    Buyer = null,
-                    Created = DateTime.Now,
-                    CreatedBy = userEmail,
-                    SendPointId = model.SendPointId,
-                    Status = Model.Enums.OrderStatus.Sent,
-                    Lines = new List<OrderLine>()
-                };
-                foreach (var line in model.Lines)
-                {
-                    order.Lines.Add(new OrderLine
+                    var order = new Order
                     {
-                        ItemsQuantity = line.ItemsQuantity,
-                        PriceForOneItem = line.PriceForOneItem,
-                        ProductId = line.ProductId,
-                        Product = null,
-                        Order = null,
-                        OrderId = 0
-                    });
+                        BuyerId = userId,
+                        RequestedReceptionDate = model.RequestedReceptionDate,
+                        ReceptionDate = null,
+                        Buyer = null,
+                        Created = DateTime.Now,
+                        CreatedBy = userEmail,
+                        SendPointId = model.SendPointId,
+                        Status = Model.Enums.OrderStatus.Sent,
+                        Lines = new List<OrderLine>()
+                    };
+                    foreach (var line in model.Lines)
+                    {
+                        order.Lines.Add(new OrderLine
+                        {
+                            ItemsQuantity = line.ItemsQuantity,
+                            PriceForOneItem = line.PriceForOneItem,
+                            ProductId = line.ProductId,
+                            Product = null,
+                            Order = null,
+                            OrderId = 0
+                        });
+
+                        var productSendPoint = await _unitOfWork.ProductSendPointRepository.GetAll()
+                            .FirstOrDefaultAsync(x => x.ProductId == line.ProductId && x.SendPointId == order.SendPointId);
+
+                        if(productSendPoint.AvailableQuantity - line.ItemsQuantity < 0)
+                        {
+                            throw new Exception("Not enough quantity for product - transaction rollbacked");
+                        }
+                        productSendPoint.AvailableQuantity -= line.ItemsQuantity;
+                        _unitOfWork.ProductSendPointRepository.Update(productSendPoint);
+                    }
+                    _unitOfWork.OrderRepository.Add(order);
+                    await _unitOfWork.SaveChangesAsync();
+                    await transaction.CommitAsync();
                 }
-                _unitOfWork.OrderRepository.Add(order);
-                await _unitOfWork.SaveChangesAsync();
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
                 return true;
             }
             return false;
@@ -166,15 +186,39 @@ namespace PiecykPolHurt.ApplicationLogic.Services
         {
             if (id != 0)
             {
-                var order = await _unitOfWork.OrderRepository.GetById(id).FirstOrDefaultAsync();
-                if (order != null)
+                using var transaction = await _unitOfWork.BeginTransactionAsync();
+                try
                 {
-                    order.Status = OrderStatus.Rejected;
-                    order.Modified = DateTime.Now;
-                    order.ModifiedBy = userEmail;
-                    _unitOfWork.OrderRepository.Update(order);
-                    await _unitOfWork.SaveChangesAsync();
-                    return true;
+                    var order = await _unitOfWork.OrderRepository.GetById(id).Include(x => x.Lines).FirstOrDefaultAsync();
+                    if (order != null)
+                    {
+                        order.Status = OrderStatus.Rejected;
+                        order.Modified = DateTime.Now;
+                        order.ModifiedBy = userEmail;
+                        _unitOfWork.OrderRepository.Update(order);
+                        if(order.Created.Date == DateTime.Now.Date) {
+                            foreach (var line in order.Lines)
+                            {
+                                var productSendPoint = await _unitOfWork.ProductSendPointRepository.GetAll()
+                                .FirstOrDefaultAsync(x => x.ProductId == line.ProductId && x.SendPointId == order.SendPointId);
+
+                                if (productSendPoint.AvailableQuantity - line.ItemsQuantity < 0)
+                                {
+                                    throw new Exception("Not enough quantity for product - transaction rollbacked");
+                                }
+                                productSendPoint.AvailableQuantity += line.ItemsQuantity;
+                                _unitOfWork.ProductSendPointRepository.Update(productSendPoint);
+                            }
+                        }
+                        await _unitOfWork.SaveChangesAsync();
+                        await transaction.CommitAsync();
+                        return true;
+                    }
+                }
+                catch(Exception)
+                {
+                    await transaction.RollbackAsync();
+                    throw;
                 }
             }
             return false;
