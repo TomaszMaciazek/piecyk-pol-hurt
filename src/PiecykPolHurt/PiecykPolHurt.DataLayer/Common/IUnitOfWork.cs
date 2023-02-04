@@ -1,4 +1,5 @@
-﻿using PiecykPolHurt.DataLayer.Repositories;
+﻿using Microsoft.EntityFrameworkCore.Storage;
+using PiecykPolHurt.DataLayer.Repositories;
 
 namespace PiecykPolHurt.DataLayer.Common
 {
@@ -12,5 +13,6 @@ namespace PiecykPolHurt.DataLayer.Common
         IProductSendPointRepository ProductSendPointRepository { get; }
         string ConnectionString { get; }
         Task SaveChangesAsync();
+        Task<IDbContextTransaction> BeginTransactionAsync();
     }
 }
