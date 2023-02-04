@@ -202,10 +202,6 @@ namespace PiecykPolHurt.ApplicationLogic.Services
                                 var productSendPoint = await _unitOfWork.ProductSendPointRepository.GetAll()
                                 .FirstOrDefaultAsync(x => x.ProductId == line.ProductId && x.SendPointId == order.SendPointId);
 
-                                if (productSendPoint.AvailableQuantity - line.ItemsQuantity < 0)
-                                {
-                                    throw new Exception("Not enough quantity for product - transaction rollbacked");
-                                }
                                 productSendPoint.AvailableQuantity += line.ItemsQuantity;
                                 _unitOfWork.ProductSendPointRepository.Update(productSendPoint);
                             }
