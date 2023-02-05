@@ -17,7 +17,7 @@ def run_threaded(job_func):
     job_thread = threading.Thread(target=job_func)
     job_thread.start()
 
-schedule.every(5).seconds.do(run_threaded, read_file)
+schedule.every(4).hours.do(run_threaded, read_file)
 
 while True:
     schedule.run_pending()
