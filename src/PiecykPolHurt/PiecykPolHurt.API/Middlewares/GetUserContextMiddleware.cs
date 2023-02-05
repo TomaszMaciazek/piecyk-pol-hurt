@@ -2,18 +2,20 @@ using PiecykPolHurt.API.Authorization;
 using System.Security.Claims;
 using PiecykPolHurt.DataLayer;
 using PiecykPolHurt.Model.Entities;
+using Microsoft.Data.SqlClient;
+using Dapper;
 
 namespace PiecykPolHurt.API.Middlewares;
 
 public class GetUserContextMiddleware
 {
     private readonly RequestDelegate _next;
-    private readonly ApplicationDbContext _context;
+    private readonly string _connectionString;
 
-    public GetUserContextMiddleware(RequestDelegate next, ApplicationDbContext context)
+    public GetUserContextMiddleware(RequestDelegate next, IConfiguration configuration)
     {
         _next = next;
-        _context = context;
+        _connectionString = configuration.GetConnectionString("DefaultConnection");
     }
 
     public async Task InvokeAsync(HttpContext context)
@@ -22,7 +24,7 @@ public class GetUserContextMiddleware
 
         if (!string.IsNullOrEmpty(userEmail))
         {
-            var userId = CheckIfUserShouldBeAddedToDb(userEmail);
+            var userId = await CheckIfUserShouldBeAddedToDb(userEmail);
 
             var userClaims = new List<Claim>()
                 {
@@ -34,19 +36,21 @@ public class GetUserContextMiddleware
 
         await _next(context);
     }
-    private int CheckIfUserShouldBeAddedToDb(string userEmail)
+    private async Task<int> CheckIfUserShouldBeAddedToDb(string userEmail)
     {
-        var user = _context.Users.SingleOrDefault(u => u.Email == userEmail);
-        var newUser = new User
-        {
-            Email = userEmail,
-        };
+        var addUserQuery = $"INSERT INTO Users (Email) VALUES ({userEmail})";
+        var getUserQuery = $"SELECT Id, Email From Users WHERE Email = '{userEmail}'";
+
+        await using var connection = new SqlConnection(_connectionString);
+        connection.Open();
+        var user = (await connection.QueryAsync<User>(getUserQuery)).SingleOrDefault();
 
         if (user == null)
         {
-            _context.Users.Add(newUser);
-            _context.SaveChanges();
+            await connection.ExecuteAsync(addUserQuery);
         }
-        return user is null ? newUser.Id : user.Id;
+
+        user = (await connection.QueryAsync<User>(getUserQuery)).Single();
+        return user.Id;
     }
 }
