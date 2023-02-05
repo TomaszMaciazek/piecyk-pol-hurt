@@ -5,7 +5,7 @@ import storage from "redux-persist/lib/storage";
 import ShoppingCartReducer from "./Reducers/ShoppingCartReducer";
 
 const reducers = combineReducers({
-  shoppingCart: ShoppingCartReducer,
+  shoppingCarts: ShoppingCartReducer,
 });
 
 const persistConfig = {

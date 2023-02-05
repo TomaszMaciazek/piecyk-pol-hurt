@@ -17,7 +17,7 @@ namespace PiecykPolHurt.ApplicationLogic.Services
     {
         Task<bool> CreateSendPointAsync(CreateSendPointCommand command);
         Task<bool> DeleteSendPointAsync(int id);
-        Task<IList<SimpleSendPointDto>> GetAllSendPointsAsync(bool onlyActive = true);
+        Task<IList<SendPointDto>> GetAllSendPointsAsync(bool onlyActive = true);
         Task<PaginatedList<SendPointListItemDto>> GetSendPointsAsync(SendPointQuery query);
         Task<SendPointDto> GetSendPointByIdAsync(int id);
         Task<bool> UpdateSendPointAsync(UpdateSendPointCommand command);
@@ -72,7 +72,7 @@ namespace PiecykPolHurt.ApplicationLogic.Services
                 .PaginatedListAsync(query.PageNumber, query.PageSize);
         }
 
-        public async Task<IList<SimpleSendPointDto>> GetAllSendPointsAsync(bool onlyActive = true)
+        public async Task<IList<SendPointDto>> GetAllSendPointsAsync(bool onlyActive = true)
         {
             var sendPoints = _unitOfWork.SendPointRepository.GetAll().AsNoTracking();
 
@@ -81,7 +81,7 @@ namespace PiecykPolHurt.ApplicationLogic.Services
                 sendPoints = sendPoints.Where(x => x.IsActive);
             }
 
-            return await sendPoints.ProjectTo<SimpleSendPointDto>(_mapper.ConfigurationProvider).ToListAsync();
+            return await sendPoints.ProjectTo<SendPointDto>(_mapper.ConfigurationProvider).ToListAsync();
         }
 
         public async Task<SendPointDto> GetSendPointByIdAsync(int id) 

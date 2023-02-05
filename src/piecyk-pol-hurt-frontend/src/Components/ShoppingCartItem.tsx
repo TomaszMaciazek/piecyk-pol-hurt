@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { useAuth0 } from "@auth0/auth0-react";
 import { Delete } from "@mui/icons-material";
 import {
   ListItem,
@@ -10,7 +11,7 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { OrderLines } from "../API/Models/OrderLines/OrderLines";
+import { OrderLine } from "../API/Models/Order/OrderLine";
 import Counter from "../Common/Counter";
 import {
   updateOrderLineQuantity,
@@ -18,7 +19,7 @@ import {
 } from "../Redux/Reducers/ShoppingCartReducer";
 
 interface IShoppingCartItem {
-  orderLine: OrderLines;
+  orderLine: OrderLine;
   handleDeleteOrderLine: () => void;
 }
 
@@ -28,11 +29,13 @@ const ShoppingCartitem = ({
 }: IShoppingCartItem) => {
   const [count, setCount] = useState<number>(orderLine.itemsQuantity);
   const dispatch = useDispatch();
+  const {user} = useAuth0();
 
   useEffect(() => {
     const updateShoppingCartPayload: UpdateShoppingCartPayload = {
-      productId: orderLine.productId,
+      productId: orderLine.product.id,
       quantity: count,
+      email: user?.email
     };
 
     dispatch(updateOrderLineQuantity(updateShoppingCartPayload));
