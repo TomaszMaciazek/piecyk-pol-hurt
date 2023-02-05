@@ -277,6 +277,12 @@ namespace PiecykPolHurt.ApplicationLogic.Services
                 if (builder.Length > 0)
                 {
                     var orderBy = doc.GetElementsByTagName("order");
+                    var groupBy = doc.GetElementsByTagName("group");
+                    if (groupBy.Count > 0)
+                    {
+                        builder.Append($" GROUP BY {groupBy[0].InnerText}");
+                    }
+
                     if (orderBy.Count > 0)
                     {
                         builder.Append($" ORDER BY {orderBy[0].InnerText}");
