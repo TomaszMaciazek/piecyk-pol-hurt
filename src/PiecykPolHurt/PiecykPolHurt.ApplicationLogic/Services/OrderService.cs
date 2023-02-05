@@ -106,6 +106,9 @@ namespace PiecykPolHurt.ApplicationLogic.Services
                         Status = Model.Enums.OrderStatus.Sent,
                         Lines = new List<OrderLine>()
                     };
+
+                    var today = DateTime.Now.Date;
+
                     foreach (var line in model.Lines)
                     {
                         order.Lines.Add(new OrderLine
@@ -118,7 +121,9 @@ namespace PiecykPolHurt.ApplicationLogic.Services
                             OrderId = 0
                         });
 
+
                         var productSendPoint = await _unitOfWork.ProductSendPointRepository.GetAll()
+                            .Where(x => x.ForDate.Date == today)
                             .FirstOrDefaultAsync(x => x.ProductId == line.ProductId && x.SendPointId == order.SendPointId);
 
                         if(productSendPoint.AvailableQuantity - line.ItemsQuantity < 0)
@@ -196,12 +201,13 @@ namespace PiecykPolHurt.ApplicationLogic.Services
                         order.Modified = DateTime.Now;
                         order.ModifiedBy = userEmail;
                         _unitOfWork.OrderRepository.Update(order);
-                        if(order.Created.Date == DateTime.Now.Date) {
+                        var today = DateTime.Now.Date;
+                        if (order.Created.Date == today) {
                             foreach (var line in order.Lines)
                             {
                                 var productSendPoint = await _unitOfWork.ProductSendPointRepository.GetAll()
+                                .Where(x => x.ForDate.Date == today)
                                 .FirstOrDefaultAsync(x => x.ProductId == line.ProductId && x.SendPointId == order.SendPointId);
-
                                 productSendPoint.AvailableQuantity += line.ItemsQuantity;
                                 _unitOfWork.ProductSendPointRepository.Update(productSendPoint);
                             }
