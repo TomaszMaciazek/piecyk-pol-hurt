@@ -26,17 +26,17 @@ import { useSelector } from "react-redux";
 import { RootState } from "../Redux/store";
 
 const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
-  '& .MuiBadge-badge': {
+  "& .MuiBadge-badge": {
     right: -3,
     top: 13,
     border: `2px solid ${theme.palette.background.paper}`,
-    padding: '0 4px',
+    padding: "0 4px",
   },
 }));
 
 const Navigation = () => {
-  const pages = ["Sklep", "Produkty", "Lokacje"];
-  const links = ["sklep", "produkty", "lokalizacje"];
+  const pages = ["Sklep", "Produkty", "Lokacje", 'Zmień lokalizację'];
+  const links = ["sklep", "produkty", "lokalizacje", 'lokalizacja'];
   const [drawerOpen, setDrawerOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -44,8 +44,17 @@ const Navigation = () => {
     setDrawerOpen(!drawerOpen);
   };
 
-  const { isAuthenticated, logout, loginWithRedirect } = useAuth0();
-  const orderLines = useSelector((state: RootState) => state.shoppingCart.orderLines);
+  const { isAuthenticated, logout, loginWithRedirect, user } = useAuth0();
+  const chosenSendPoint = useSelector(
+    (state: RootState) => state.shoppingCarts.chosenSendPoint
+  );
+  const orderLines = useSelector(
+    (state: RootState) =>
+      state.shoppingCarts.shoppingCarts.find(
+        (item) =>
+          item.email === user?.email && item.sentPointId === chosenSendPoint?.id
+      )?.orderLines
+  );
 
   const authenticateAction = () => {
     if (isAuthenticated) {
@@ -88,7 +97,7 @@ const Navigation = () => {
               variant="h6"
               noWrap
               component="a"
-              href="/"
+              href="/sklep"
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
@@ -118,7 +127,7 @@ const Navigation = () => {
             <Typography
               variant="h5"
               component="a"
-              href=""
+              href="/sklep"
               sx={{
                 mr: 2,
                 display: { xs: "flex", md: "none" },
@@ -138,14 +147,21 @@ const Navigation = () => {
                   key={page}
                   onClick={() => navigate(links[index])}
                   sx={{ my: 2, color: "white", display: "block" }}
-                  variant='text'
+                  variant="text"
                 >
                   {page}
                 </Button>
               ))}
             </Box>
-            <IconButton size="large" sx={{mr: 2}} onClick={() => navigate("/koszyk")}>
-              <StyledBadge badgeContent={orderLines.length} color="info">
+            <IconButton
+              size="large"
+              sx={{ mr: 2 }}
+              onClick={() => navigate("/koszyk")}
+            >
+              <StyledBadge
+                badgeContent={orderLines && orderLines.length}
+                color="info"
+              >
                 <ShoppingCartIcon sx={{ color: "white" }} />
               </StyledBadge>
             </IconButton>

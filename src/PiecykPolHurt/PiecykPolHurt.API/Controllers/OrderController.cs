@@ -104,7 +104,7 @@ namespace PiecykPolHurt.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<ActionResult<bool>> RejectOrder([FromQuery] int id)
+        public async Task<ActionResult<bool>> RejectOrder([FromRoute] int id)
         {
             try
             {
@@ -125,7 +125,7 @@ namespace PiecykPolHurt.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<ActionResult<bool>> FinishOrder([FromQuery] int id)
+        public async Task<ActionResult<bool>> FinishOrder([FromRoute] int id)
         {
             try
             {
@@ -146,7 +146,7 @@ namespace PiecykPolHurt.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<ActionResult<bool>> CancelOrder([FromQuery] int id)
+        public async Task<ActionResult<bool>> CancelOrder([FromRoute] int id)
         {
             try
             {
