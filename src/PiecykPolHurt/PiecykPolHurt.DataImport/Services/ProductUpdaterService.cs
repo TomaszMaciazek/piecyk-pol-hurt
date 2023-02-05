@@ -1,9 +1,6 @@
-using System.Collections;
 using Grpc.Core;
 using PiecykPolHurt.ApplicationLogic.Services;
-using PiecykPolHurt.Model.Commands;
 using PiecykPolHurt.Model.Dto.ProductSendPoint;
-using PiecykPolHurt.Model.Entities;
 
 namespace PiecykPolHurt.DataImport.Services;
 
