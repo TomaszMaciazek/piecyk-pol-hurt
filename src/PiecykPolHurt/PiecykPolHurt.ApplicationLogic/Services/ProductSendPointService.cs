@@ -1,16 +1,13 @@
-﻿using System.Data;
-using System.Net;
-using AutoMapper;
+﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using PiecykPolHurt.DataLayer.Common;
 using PiecykPolHurt.Model.Commands;
-using PiecykPolHurt.Model.Dto;
+using PiecykPolHurt.Model.Dto.Product;
 using PiecykPolHurt.Model.Dto.ProductSendPoint;
 using PiecykPolHurt.Model.Entities;
-using PiecykPolHurt.Model.Enums;
-using PiecykPolHurt.Model.Queries;
+using System.Data;
 
 
 
@@ -21,7 +18,7 @@ namespace PiecykPolHurt.ApplicationLogic.Services
         Task<bool> CreateProductSendPointAsync(CreateProductSendPointCommand command);
         Task<IList<ProductSendPoint>> GetAllProductSendPointsAsync(bool forToday = true);
         Task<bool> UpdateProductSendPointAsync(UpdateProductSendPointCommand command);
-
+        Task<IList<ProductSendPointListItemDto>> GetTodaysProductsFromSendPoint(int id);
         Task<CreateProductSendPointCommand> GetCreateProductSendPointCommand(ProductSendPointUpdateDto updateDto);
         
         Task<UpdateProductSendPointCommand> GetUpdateProductSendPointCommand(ProductSendPointUpdateDto updateDto);
@@ -102,6 +99,17 @@ namespace PiecykPolHurt.ApplicationLogic.Services
             }
 
             return productSendPoints;
+        }
+
+        public async Task<IList<ProductSendPointListItemDto>> GetTodaysProductsFromSendPoint(int id)
+        {
+            var todayBegin = DateTime.Now.Date;
+            var todayEnd = new DateTime(todayBegin.Year, todayBegin.Month, todayBegin.Day, 23, 59, 59);
+            return await _unitOfWork.ProductSendPointRepository.GetAll()
+                .Include(x => x.Product)
+                .AsNoTracking().Where(x => x.SendPointId == id && x.ForDate >= todayBegin && x.ForDate <= todayEnd)
+                .ProjectTo<ProductSendPointListItemDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();
         }
 
         public async Task<bool> MakeUpdate(IList<ProductSendPointUpdateDto> updates)
