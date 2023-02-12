@@ -37,6 +37,18 @@ namespace PiecykPolHurt.DataLayer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DictionaryTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Order Status"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "User Role"
+                        });
                 });
 
             modelBuilder.Entity("PiecykPolHurt.Model.Entities.DictionaryValue", b =>
@@ -62,6 +74,43 @@ namespace PiecykPolHurt.DataLayer.Migrations
                     b.HasIndex("DictionaryTypeId");
 
                     b.ToTable("DictionaryValues");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Wysłane",
+                            DictionaryTypeId = 1,
+                            Value = 0
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Odrzucone",
+                            DictionaryTypeId = 1,
+                            Value = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Zaakceptowane",
+                            DictionaryTypeId = 1,
+                            Value = 2
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "Anulowane",
+                            DictionaryTypeId = 1,
+                            Value = 3
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "Zakończone",
+                            DictionaryTypeId = 1,
+                            Value = 4
+                        });
                 });
 
             modelBuilder.Entity("PiecykPolHurt.Model.Entities.Order", b =>
@@ -108,7 +157,7 @@ namespace PiecykPolHurt.DataLayer.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("PiecykPolHurt.Model.Entities.OrderLines", b =>
+            modelBuilder.Entity("PiecykPolHurt.Model.Entities.OrderLine", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -312,10 +361,6 @@ namespace PiecykPolHurt.DataLayer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.ToTable("Users");
@@ -351,7 +396,7 @@ namespace PiecykPolHurt.DataLayer.Migrations
                     b.Navigation("SendPoint");
                 });
 
-            modelBuilder.Entity("PiecykPolHurt.Model.Entities.OrderLines", b =>
+            modelBuilder.Entity("PiecykPolHurt.Model.Entities.OrderLine", b =>
                 {
                     b.HasOne("PiecykPolHurt.Model.Entities.Order", "Order")
                         .WithMany("Lines")

@@ -1,0 +1,6 @@
+pandas
+flask
+openpyxl
+grpcio
+grpcio-tools
+schedule

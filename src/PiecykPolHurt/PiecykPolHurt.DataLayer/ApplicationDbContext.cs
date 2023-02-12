@@ -11,7 +11,7 @@ namespace PiecykPolHurt.DataLayer
     public class ApplicationDbContext : DbContext
     {
         public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderLines> OrdersLines { get; set; }
+        public DbSet<OrderLine> OrdersLines { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<SendPoint> SendPoints { get; set; }
         public DbSet<ProductSendPoint> ProductSendPoints { get; set; }
@@ -67,6 +67,21 @@ namespace PiecykPolHurt.DataLayer
                 .WithOne(x => x.Type)
                 .HasForeignKey(x => x.DictionaryTypeId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<DictionaryType>()
+                .HasData(
+                new DictionaryType { Id = 1, Name = "Order Status" },
+                new DictionaryType { Id = 2, Name = "User Role" }
+                );
+
+            builder.Entity<DictionaryValue>()
+                .HasData(
+                    new DictionaryValue { Id = 1, DictionaryTypeId = 1, Value = 0, Description = "Wysłane"},
+                    new DictionaryValue { Id = 2, DictionaryTypeId = 1, Value = 1, Description = "Odrzucone" },
+                    new DictionaryValue { Id = 3, DictionaryTypeId = 1, Value = 2, Description = "Zaakceptowane" },
+                    new DictionaryValue { Id = 4, DictionaryTypeId = 1, Value = 3, Description = "Anulowane" },
+                    new DictionaryValue { Id = 5, DictionaryTypeId = 1, Value = 4, Description = "Zakończone" }
+                );
         }
     }
 }

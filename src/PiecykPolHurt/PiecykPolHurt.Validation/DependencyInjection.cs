@@ -17,6 +17,12 @@ namespace PiecykPolHurt.Validation
 
             services.AddScoped<IValidator<UpdateProductCommand>, UpdateProductCommandValidator>();
             services.AddScoped<IValidator<CreateProductCommand>, CreateProductCommandValidator>();
+
+            services.AddScoped<IValidator<CreateOrderLineCommand>, CreateOrderLineCommandValidator>();
+            services.AddScoped<IValidator<CreateOrderCommand>, CreateOrderCommandValidator>();
+            
+            services.AddScoped<IValidator<CreateProductSendPointCommand>, CreateProductSendPointCommandValidator>();
+            services.AddScoped<IValidator<UpdateProductSendPointCommand>, UpdateProductSendPointCommandValidator>();
             return services;
         }
     }

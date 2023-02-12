@@ -21,6 +21,7 @@ namespace PiecykPolHurt.ApplicationLogic.Services
         Task<ProductDto> GetProductByIdAsync(int id);
         Task<PaginatedList<ProductListItemDto>> GetProductsAsync(ProductQuery query);
         Task<bool> UpdateProductAsync(UpdateProductCommand command, string user);
+        Task<Product> GetProductByCode(String code);
     }
 
     public class ProductService : IProductService
@@ -90,6 +91,8 @@ namespace PiecykPolHurt.ApplicationLogic.Services
             .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync();
 
+        public async Task<Product> GetProductByCode(String code)
+            => await _unitOfWork.ProductRepository.GetByCode(code);
         public async Task<bool> CreateProductAsync(CreateProductCommand command, string user)
         {
             var validationResult = await _createValidator.ValidateAsync(command);

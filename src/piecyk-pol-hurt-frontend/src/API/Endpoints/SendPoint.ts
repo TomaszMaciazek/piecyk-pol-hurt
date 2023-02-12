@@ -11,6 +11,10 @@ const getSendPoints = async (params: SendPointQuery): Promise<PaginatedList<Send
   return Client("GET", controllerName, {}, params);
 };
 
+const getActiveSendPoints = async (): Promise<SendPoint[]> => {
+  return Client("GET", `${controllerName}/active`);
+};
+
 const deleteSendPoint = async (id: number): Promise<boolean> => {
   return Client("DELETE", `${controllerName}/${id}`);
 };
@@ -27,4 +31,4 @@ const addSendPoint = async (
   return Client("POST", controllerName, { body });
 };
 
-export { getSendPoints, deleteSendPoint, updateSendPoint, addSendPoint };
+export { getSendPoints, getActiveSendPoints, deleteSendPoint, updateSendPoint, addSendPoint };

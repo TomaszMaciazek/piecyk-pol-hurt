@@ -25,7 +25,7 @@ namespace PiecykPolHurt.API.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginatedList<ProductListItemDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<PaginatedList<ProductListItemDto>>> GetSendPoints([FromQuery] ProductQuery query)
+        public async Task<ActionResult<PaginatedList<ProductListItemDto>>> GetProducts([FromQuery] ProductQuery query)
         {
             try
             {
@@ -40,7 +40,7 @@ namespace PiecykPolHurt.API.Controllers
         [HttpGet("all")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<SimpleProductDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<IList<SimpleSendPointDto>>> GetAllSendPoints()
+        public async Task<ActionResult<IList<SimpleSendPointDto>>> GetAllProducts()
         {
             try
             {
@@ -55,7 +55,7 @@ namespace PiecykPolHurt.API.Controllers
         [HttpGet("active")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<SimpleProductDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<IList<SimpleSendPointDto>>> GetAllActiveSendPoints()
+        public async Task<ActionResult<IList<SimpleSendPointDto>>> GetAllActiveProducts()
         {
             try
             {
@@ -71,7 +71,7 @@ namespace PiecykPolHurt.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<PaginatedList<ProductDto>>> GetProduct([FromRoute] int id)
+        public async Task<ActionResult<ProductDto>> GetProduct([FromRoute] int id)
         {
             try
             {

@@ -1,4 +1,5 @@
 import { Client } from "../Client/Client";
+<<<<<<< HEAD
 import { Order } from "../Models/Order/Order";
 import { OrderQuery } from "../Models/Order/OrderQuery";
 import { PaginatedList } from "../Models/PaginatedList";
@@ -24,3 +25,14 @@ const getOrders = async (
   };
 
   export { getOrders, addOrder, updateOrder, deleteOrder };
+=======
+import { CreateOrderCommand } from "../Models/Order/CreateOrderCommand";
+
+const controllerName = "Order";
+
+const createOrder = async (body: CreateOrderCommand): Promise<null> => {
+  return Client("POST", controllerName, { body });
+};
+
+export { createOrder };
+>>>>>>> main

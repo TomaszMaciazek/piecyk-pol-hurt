@@ -1,93 +1,64 @@
-import { Add, Remove } from "@mui/icons-material";
-import {
-  Grid,
-  Card,
-  CardMedia,
-  CardContent,
-  Typography,
-  CardActions,
-  Button,
-  ButtonGroup,
-  TextField,
-} from "@mui/material";
-import React, { useState } from "react";
-import OrderModal from "../Components/OrderModal";
-import "../SCSS/Shop.scss";
+import { useAuth0 } from "@auth0/auth0-react";
+import { Grid } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import { getProducts } from "../API/Endpoints/Product";
+import { OrderLine } from "../API/Models/Order/OrderLine";
+import { Product } from "../API/Models/Product/Product";
+import { ProductQuery } from "../API/Models/Product/ProductQuery";
+import LoadingScreen from "../Common/LoadingScreen";
+import ProductItem from "../Components/ProductItem";
+import { addOrderLines } from "../Redux/Reducers/ShoppingCartReducer";
 
 const Shop = () => {
-  const [openOrderModal, setOpenOrderModal] = useState<boolean>(false);
-  const [count, setCount] = useState<number>(0);
+  const [products, setProducts] = useState<Product[]>();
+  const { user } = useAuth0();
+
+  const dispatch = useDispatch();
+
+
+  const handleAddToShoppingCart = (product: Product, quantity: number) => {
+    toast.success("Dodano do koszyka");
+
+    const orderLine: OrderLine = {
+      itemsQuantity: quantity,
+      product: product,
+      priceForOneItem: product.price,
+    };
+    dispatch(
+      addOrderLines({
+        email: user?.email,
+        orderLine: orderLine,
+      })
+    );
+  };
+
+  useEffect(() => {
+    const productQuery: ProductQuery = {
+      pageNumber: 1,
+      pageSize: 100,
+    };
+
+    getProducts(productQuery).then((data) => {
+      setProducts(data.items);
+    });
+  }, []);
+
+  if (!products) {
+    return <LoadingScreen />;
+  }
 
   return (
-    <>
-      <Grid justifyContent="flex-end" container marginBottom={2}></Grid>
-      <Grid container spacing={2}>
-        <Grid item key={"1"}>
-          <Card sx={{ width: 350 }}>
-            <CardMedia
-              component="img"
-              height="140"
-              width="auto"
-              image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2jWd_yGETuMN0NI9QjCydgFMOteG4em2Baw&usqp=CAU"
-              alt="coal"
-            />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
-                Węgiel
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                węgiel super się pali
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Grid container spacing={1} justifyContent="space-between">
-                <Button size="small" onClick={() => setOpenOrderModal(true)}>
-                  Dodaj do koszyka
-                </Button>
-                <ButtonGroup>
-                  <Button
-                    onClick={() => {
-                      setCount(Math.max(count - 1, 0));
-                    }}
-                    size="small"
-                  >
-                    <Remove fontSize="small" />
-                  </Button>
-                  <TextField
-                    value={Number.isNaN(count) ? 0 : count}
-                    onChange={(e) => {
-                      setCount(parseInt(e.target.value));
-                    }}
-                    className="count"
-                    type="number"
-                    size="small"
-                    inputProps={{style: { textAlign: 'center' }}}
-                    sx={{
-                      "& fieldset": { border: "none" },
-                    }}
-                  />
-                  <Button
-                    variant="contained"
-                    onClick={() => {
-                      setCount(count + 1);
-                    }}
-                    size="small"
-                  >
-                    <Add fontSize="small" />
-                  </Button>
-                </ButtonGroup>
-              </Grid>
-            </CardActions>
-          </Card>
-        </Grid>
-      </Grid>
-      <OrderModal
-        handleClose={() => {
-          setOpenOrderModal(false);
-        }}
-        open={openOrderModal}
-      />
-    </>
+    <Grid container spacing={4}>
+      {products.map((product) => (
+        <ProductItem
+          key={product.id}
+          product={product}
+          handleAddToShoppingCart={handleAddToShoppingCart}
+        />
+      ))}
+    </Grid>
   );
 };
 

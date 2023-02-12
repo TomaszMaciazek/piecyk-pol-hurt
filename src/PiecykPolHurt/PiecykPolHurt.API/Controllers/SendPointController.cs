@@ -55,9 +55,9 @@ namespace PiecykPolHurt.API.Controllers
         }
 
         [HttpGet("active")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<SimpleSendPointDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<SendPointDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<IList<SimpleSendPointDto>>> GetAllActiveSendPoints()
+        public async Task<ActionResult<IList<SendPointDto>>> GetAllActiveSendPoints()
         {
             try
             {
