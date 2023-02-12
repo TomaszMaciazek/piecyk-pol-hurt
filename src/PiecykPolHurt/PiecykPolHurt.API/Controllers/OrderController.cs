@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PiecykPolHurt.API.Authorization;
 using PiecykPolHurt.ApplicationLogic.Result;
 using PiecykPolHurt.ApplicationLogic.Services;
@@ -10,6 +11,7 @@ namespace PiecykPolHurt.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class OrderController : ControllerBase
     {
         private readonly IOrderService _orderService;
@@ -29,6 +31,21 @@ namespace PiecykPolHurt.API.Controllers
             try
             {
                 return Ok(await _orderService.GetOrders(query));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("buyer/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginatedList<OrderListItemDto>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<PaginatedList<OrderListItemDto>>> GetOrdersFromUser([FromRoute] int id, [FromQuery] OrderQuery query)
+        {
+            try
+            {
+                return Ok(await _orderService.GetOrders(query, id));
             }
             catch (Exception ex)
             {
@@ -59,6 +76,7 @@ namespace PiecykPolHurt.API.Controllers
 
 
         [HttpPost]
+        [Authorize(Policy = Policy.Customer)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -80,6 +98,7 @@ namespace PiecykPolHurt.API.Controllers
         }
 
         [HttpPut("approve")]
+        [Authorize(Policy = Policy.Seller)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -101,6 +120,7 @@ namespace PiecykPolHurt.API.Controllers
         }
 
         [HttpPatch("reject/{id}")]
+        [Authorize(Policy = Policy.Seller)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -122,6 +142,7 @@ namespace PiecykPolHurt.API.Controllers
         }
 
         [HttpPatch("finish/{id}")]
+        [Authorize(Policy = Policy.Seller)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -143,6 +164,7 @@ namespace PiecykPolHurt.API.Controllers
         }
 
         [HttpPatch("cancel/{id}")]
+        [Authorize(Policy = Policy.Customer)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
