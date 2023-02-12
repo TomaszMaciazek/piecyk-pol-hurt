@@ -135,7 +135,7 @@ namespace PiecykPolHurt.ApplicationLogic.Services
                         if (command == null) continue;
                         if (await UpdateProductSendPointAsync(command) == false) return false;
                     }
-                    catch (RowNotInTableException e)
+                    catch (RowNotInTableException)
                     {
                         return false;
                     }
