@@ -1,10 +1,61 @@
-import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
-import React from "react";
+import { Add } from "@mui/icons-material";
+import { Button, Grid } from "@mui/material";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { useCallback, useEffect, useState } from "react";
+import { deleteOrder, getOrders } from "../API/Endpoints/Order";
+import { Order } from "../API/Models/Order/Order";
+import { OrderQuery } from "../API/Models/Order/OrderQuery";
+import ConfirmationDialog from "../Common/ConfirmationDialog";
+import ProductModal from "../Components/ProductModal";
 import { DataGridTranslations } from "../MUI/DataGridTranslations";
+import { TableToolbar } from "../MUI/TableToolbar";
 
 const Orders = () => {
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
+
+  const [pageIndex, setPageIndex] = useState<number>(0);
+  const [itemCount, setItemCount] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(20);
+
+  const [refresh, setRefresh] = useState<boolean>(false);
+  const [orders, setOrders] = useState<Order[]>();
+  const [editedOrder, setEditedOrder] = useState<Order | null>(null);
+
+  const getOrdersFromApi = useCallback(() => {
+    const orderQuery: OrderQuery = {
+      pageNumber: pageIndex + 1,
+      pageSize: pageSize,
+    };
+
+    getOrders(orderQuery).then((data) => {
+      setRefresh(false);
+      setOrders(data.items);
+      setItemCount(data.totalCount);
+    });
+  }, [pageIndex, pageSize]);
+
+  useEffect(() => {
+    getOrdersFromApi();
+  }, [getOrdersFromApi, pageIndex]);
+
+  useEffect(() => {
+    if (refresh) {
+      getOrdersFromApi();
+    }
+  }, [getOrdersFromApi, refresh]);
+
+  const handleDelete = () => {
+    if (editedOrder) {
+      deleteOrder(editedOrder.id).then(() => {
+        getOrdersFromApi();
+        setEditedOrder(null);
+      });
+    }
+  };
+
   const columns: GridColDef[] = [
-    { field: "id", headerName: "Id zamówienia" },
+    { field: "id", headerName: "Id zamówienia", type: "number" },
     {
       field: "product",
       headerName: "Nazwa produktu",
@@ -30,71 +81,58 @@ const Orders = () => {
     },
   ];
 
-  const rows = [
-    {
-      id: 1,
-      product: "Snow",
-      price: 123,
-      age: 35,
-      orderDate: new Date(),
-      status: "Odebrano",
-    },
-    {
-      id: 2,
-      product: "Lannister",
-      price: 123331,
-      orderDate: new Date(),
-      status: "Odebrano",
-    },
-    {
-      id: 3,
-      product: "Lannister",
-      price: 123,
-      orderDate: new Date(),
-      status: "Odebrano",
-    },
-    {
-      id: 4,
-      product: "Stark",
-      price: 123,
-      orderDate: new Date(),
-      status: "Odebrano",
-    },
-    {
-      id: 5,
-      product: "Targaryen",
-      price: 123,
-      orderDate: new Date(),
-      status: "Odebrano",
-    },
-    {
-      id: 6,
-      product: "Melisandre",
-      price: 22,
-      orderDate: new Date(),
-      status: "Odebrano",
-    },
-  ];
+  if (!products) {
+    return <LoadingScreen />;
+  }
 
   return (
-    <div style={{ height: 400, width: "100%" }}>
-      <div style={{ display: "flex", height: "100%" }}>
-        <div style={{ flexGrow: 1 }}>
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            pageSize={5}
-            rowsPerPageOptions={[5]}
-            disableSelectionOnClick
-            experimentalFeatures={{ newEditingApi: true, }}
-            localeText={DataGridTranslations}
-            components={{
-              Toolbar: GridToolbar,
-            }}
-          />
+    <>
+      <Grid justifyContent="flex-end" container marginBottom={2}>
+        <Button
+          variant="contained"
+          endIcon={<Add />}
+          onClick={() => setOpenModal(true)}
+        >
+          Dodaj zamówienie
+        </Button>
+      </Grid>
+      <div style={{ height: 400, width: "100%" }}>
+        <div style={{ display: "flex", height: "100%" }}>
+          <div style={{ flexGrow: 1 }}>
+            <DataGrid
+              rows={orders}
+              columns={columns}
+              disableSelectionOnClick
+              experimentalFeatures={{ newEditingApi: true }}
+              localeText={DataGridTranslations}
+              rowsPerPageOptions={[10, 20, 50, 100, 200]}
+              components={{
+                Toolbar: TableToolbar,
+              }}
+              pageSize={pageSize}
+              page={pageIndex}
+              rowCount={itemCount}
+              onPageChange={(page) => setPageIndex(page)}
+              onPageSizeChange={(pageSize) => setPageSize(pageSize)}
+            />
+          </div>
         </div>
       </div>
-    </div>
+      <ProductModal
+        handleClose={() => {
+          setEditedOrder(null);
+          setOpenModal(false);
+        }}
+        open={openModal}
+        setRefresh={setRefresh}
+        editedOrder={editedOrder}
+      />
+      <ConfirmationDialog
+        open={openDialog}
+        handleClose={() => setOpenDialog(false)}
+        handleConfirm={handleDelete}
+      />
+    </>
   );
 };
 

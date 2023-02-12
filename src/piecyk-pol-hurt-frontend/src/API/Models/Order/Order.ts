@@ -1,4 +1,4 @@
-import { OrderStatus } from "../../Constants/Enums/OrderStatus";
+import { OrderStatus } from "../../../Constants/Enums/OrderStatus";
 
 export interface Order {
     id: number;
