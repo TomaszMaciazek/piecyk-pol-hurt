@@ -38,6 +38,21 @@ namespace PiecykPolHurt.API.Controllers
             }
         }
 
+        [HttpGet("buyer/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginatedList<OrderListItemDto>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<PaginatedList<OrderListItemDto>>> GetOrdersFromUser([FromRoute] int id, [FromQuery] OrderQuery query)
+        {
+            try
+            {
+                return Ok(await _orderService.GetOrders(query, id));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
