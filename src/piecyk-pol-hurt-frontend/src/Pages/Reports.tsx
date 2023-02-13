@@ -94,12 +94,12 @@ const Reports = () => {
       },
     },
     {
-      field: "Generowanie",
+      field: "Raport",
       flex: 1.2,
       renderCell: (row) => {
         return (
-          <Button variant="contained" onClick={() => {}}>
-            Generuj raport
+          <Button variant="contained" color="secondary" onClick={() => {}}>
+            Generuj
           </Button>
         );
       },

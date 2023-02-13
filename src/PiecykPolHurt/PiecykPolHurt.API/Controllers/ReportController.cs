@@ -76,7 +76,7 @@ namespace PiecykPolHurt.API.Controllers
         }
 
         [HttpPost]
-        //[Authorize(Policy = Policy.Admin)]
+        [Authorize(Policy = Policy.Admin)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]

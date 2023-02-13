@@ -56,7 +56,7 @@ const Orders = () => {
   useEffect(() => {
     if (permissions === UserRole.LoggedUser) getUserOrdersFromApi();
     else getOrdersFromApi();
-  }, [getOrdersFromApi, pageIndex]);
+  }, [getOrdersFromApi, getUserOrdersFromApi, pageIndex, permissions]);
 
   useEffect(() => {
     if (refresh) {
