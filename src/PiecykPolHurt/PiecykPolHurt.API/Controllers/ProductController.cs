@@ -1,28 +1,35 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PiecykPolHurt.API.Authorization;
 using PiecykPolHurt.ApplicationLogic.Result;
 using PiecykPolHurt.ApplicationLogic.Services;
 using PiecykPolHurt.Model.Commands;
 using PiecykPolHurt.Model.Dto;
+using PiecykPolHurt.Model.Dto.Product;
 using PiecykPolHurt.Model.Queries;
 
 namespace PiecykPolHurt.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
+        private readonly IProductSendPointService _productSendPointService;
         private readonly IUser _user;
 
-        public ProductController(IProductService productService, IUser user)
+        public ProductController(IProductService productService, IUser user, IProductSendPointService productSendPointService)
         {
             _productService = productService;
+
             _user = user;
+            _productSendPointService = productSendPointService;
         }
 
         [HttpGet]
+        [Authorize(Policy = Policy.Admin)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginatedList<ProductListItemDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<PaginatedList<ProductListItemDto>>> GetProducts([FromQuery] ProductQuery query)
@@ -45,6 +52,22 @@ namespace PiecykPolHurt.API.Controllers
             try
             {
                 return Ok(await _productService.GetAllProductsAsync(false));
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("sendPoint/{id}")]
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<ProductSendPointListItemDto>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IList<ProductSendPointListItemDto>>> GetTodayProductsFromSendPoint([FromRoute] int id)
+        {
+            try
+            {
+                return Ok(await _productSendPointService.GetTodaysProductsFromSendPoint(id));
             }
             catch (Exception)
             {
@@ -89,6 +112,7 @@ namespace PiecykPolHurt.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = Policy.Admin)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -110,6 +134,7 @@ namespace PiecykPolHurt.API.Controllers
         }
 
         [HttpPut]
+        [Authorize(Policy = Policy.Admin)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -131,6 +156,7 @@ namespace PiecykPolHurt.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Policy = Policy.Admin)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]

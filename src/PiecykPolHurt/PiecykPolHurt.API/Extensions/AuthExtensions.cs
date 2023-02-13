@@ -26,6 +26,7 @@ public static class AuthExtensions
                 policy.RequireClaim(Claims.Permissions, PermissionName.Admin));
             options.AddPolicy(Policy.Seller, policy =>
                 policy.RequireClaim(Claims.Permissions, PermissionName.Seller));
+            options.AddPolicy(Policy.Cooperant, policy => policy.RequireClaim(Claims.Permissions, PermissionName.Cooperant));
         });
     }
 
