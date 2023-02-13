@@ -1,17 +1,15 @@
-import { Add } from "@mui/icons-material";
-import { Button, Grid } from "@mui/material";
+import { Grid } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useCallback, useEffect, useState } from "react";
 import { deleteOrder, getOrders } from "../API/Endpoints/Order";
 import { Order } from "../API/Models/Order/Order";
 import { OrderQuery } from "../API/Models/Order/OrderQuery";
 import ConfirmationDialog from "../Common/ConfirmationDialog";
-import ProductModal from "../Components/ProductModal";
+import LoadingScreen from "../Common/LoadingScreen";
 import { DataGridTranslations } from "../MUI/DataGridTranslations";
 import { TableToolbar } from "../MUI/TableToolbar";
 
 const Orders = () => {
-  const [openModal, setOpenModal] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
 
   const [pageIndex, setPageIndex] = useState<number>(0);
@@ -81,20 +79,13 @@ const Orders = () => {
     },
   ];
 
-  if (!products) {
+  if (!orders) {
     return <LoadingScreen />;
   }
 
   return (
     <>
       <Grid justifyContent="flex-end" container marginBottom={2}>
-        <Button
-          variant="contained"
-          endIcon={<Add />}
-          onClick={() => setOpenModal(true)}
-        >
-          Dodaj zamówienie
-        </Button>
       </Grid>
       <div style={{ height: 400, width: "100%" }}>
         <div style={{ display: "flex", height: "100%" }}>
@@ -118,15 +109,6 @@ const Orders = () => {
           </div>
         </div>
       </div>
-      <ProductModal
-        handleClose={() => {
-          setEditedOrder(null);
-          setOpenModal(false);
-        }}
-        open={openModal}
-        setRefresh={setRefresh}
-        editedOrder={editedOrder}
-      />
       <ConfirmationDialog
         open={openDialog}
         handleClose={() => setOpenDialog(false)}

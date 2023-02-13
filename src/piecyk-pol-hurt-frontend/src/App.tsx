@@ -12,6 +12,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateEmail } from "./Redux/Reducers/ShoppingCartReducer";
 import LocationChoosing from "./Pages/LocationChoosing";
 import { RootState } from "./Redux/store";
+import Orders from "./Pages/Orders";
+import { getPermissions } from "./API/Endpoints/User";
 
 const App = () => {
   document.title = "Piecyk Pol Hurt";
@@ -44,6 +46,10 @@ const App = () => {
   useEffect(() => {
     if (user) {
       dispatch(updateEmail(user.email));
+
+      getPermissions().then((data) => {
+        dispatch(updatePermission)
+      })
     }
   }, [user?.email]);
 
@@ -62,6 +68,7 @@ const App = () => {
           <Route path="/produkty" element={<Products />} />
           <Route path="/lokalizacje" element={<Locations />} />
           <Route path="/koszyk" element={<ShoppingCart />} />
+          <Route path="/zamowienia" element={<Orders />} />
         </Routes>
       </main>
     </BrowserRouter>
