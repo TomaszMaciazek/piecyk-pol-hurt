@@ -7,7 +7,7 @@ import ShoppingCartReducer from "./Reducers/ShoppingCartReducer";
 
 const reducers = combineReducers({
   shoppingCarts: ShoppingCartReducer,
-  orders: OrderReducer
+  orders: OrderReducer,
 });
 
 const persistConfig = {

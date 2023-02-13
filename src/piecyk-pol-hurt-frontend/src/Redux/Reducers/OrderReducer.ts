@@ -14,9 +14,7 @@ export const orderSlice = createSlice({
   initialState,
   reducers: {
     updatePermission: (state, action: PayloadAction<UserRole>) => {
-        console.log(action.payload)
-
-      state.permissions = action.payload
+      state.permissions = action.payload;
     },
   },
 });

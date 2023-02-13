@@ -9,7 +9,9 @@ const getOrders = async (params: OrderQuery): Promise<PaginatedList<Order>> => {
   return Client("GET", controllerName, {}, params);
 };
 
-const getUserOrders = async (params: OrderQuery): Promise<PaginatedList<Order>> => {
+const getUserOrders = async (
+  params: OrderQuery
+): Promise<PaginatedList<Order>> => {
   return Client("GET", `${controllerName}/buyer`, {}, params);
 };
 
