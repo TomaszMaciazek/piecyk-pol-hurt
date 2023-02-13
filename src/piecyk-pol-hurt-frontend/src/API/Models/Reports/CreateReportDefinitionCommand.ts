@@ -3,6 +3,6 @@ export interface CreateReportDefinitionCommand {
     group: string;
     description: string;
     maxRow: number;
-    xmlDefinition: string;
+    XmlDefinition: string;
   }
   

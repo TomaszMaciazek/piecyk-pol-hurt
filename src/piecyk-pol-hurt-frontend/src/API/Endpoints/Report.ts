@@ -8,7 +8,7 @@ import { ReportListItemDto } from "../Models/Reports/ReportListItemDto";
 import { ReportQuery } from "../Models/Reports/ReportQuery";
 import { UpdateReportDefinitionCommand } from "../Models/Reports/UpdateReportDefinitionCommand";
 
-const controllerName = "Reports";
+const controllerName = "Report";
 
 const getReports = async (
   params: ReportQuery
