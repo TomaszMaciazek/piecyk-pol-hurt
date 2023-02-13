@@ -1,22 +1,28 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { getProducts } from "../API/Endpoints/Product";
+import {
+  getProducts,
+  getTodaysProductsFromSendPoint,
+} from "../API/Endpoints/Product";
 import { OrderLine } from "../API/Models/Order/OrderLine";
 import { Product } from "../API/Models/Product/Product";
 import { ProductQuery } from "../API/Models/Product/ProductQuery";
 import LoadingScreen from "../Common/LoadingScreen";
 import ProductItem from "../Components/ProductItem";
 import { addOrderLines } from "../Redux/Reducers/ShoppingCartReducer";
+import { RootState } from "../Redux/store";
 
 const Shop = () => {
   const [products, setProducts] = useState<Product[]>();
   const { user } = useAuth0();
 
+  const sendPointId = useSelector(
+    (state: RootState) => state.shoppingCarts.chosenSendPoint?.id
+  );
   const dispatch = useDispatch();
-
 
   const handleAddToShoppingCart = (product: Product, quantity: number) => {
     toast.success("Dodano do koszyka");
@@ -43,6 +49,12 @@ const Shop = () => {
     getProducts(productQuery).then((data) => {
       setProducts(data.items);
     });
+
+    if (sendPointId) {
+      getTodaysProductsFromSendPoint(sendPointId).then((data) => {
+        console.log(data);
+      });
+    }
   }, []);
 
   if (!products) {

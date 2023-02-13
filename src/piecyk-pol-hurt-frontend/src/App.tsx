@@ -16,6 +16,7 @@ import Orders from "./Pages/Orders";
 import { getPermissions } from "./API/Endpoints/User";
 import { updatePermission } from "./Redux/Reducers/OrderReducer";
 import { UserRole } from "./Constants/Enums/UserRole";
+import Reports from "./Pages/Reports";
 
 const App = () => {
   document.title = "Piecyk Pol Hurt";
@@ -71,18 +72,6 @@ const App = () => {
       dispatch(updatePermission(UserRole.UnloggedUser))
     }
   }, [isLoading])
-  
-  useEffect(() => {
-    if (user) {
-      getPermissions().then((data) => {
-        let role: UserRole;
-        if (data[0] === "admin") role = 0;
-        else if (data[0] === "seller") role = 1;
-        else role = 2;
-        dispatch(updatePermission(role));
-      });
-    }
-  }, []);
 
   if (isLoading || (!isLoading && isAuthenticated && !isAcccessTokenSet)) {
     return <></>;
@@ -93,18 +82,12 @@ const App = () => {
       <Navigation />
       <main>
         <Routes>
-          <Route
-            path="/"
-            element={
-              <Navigate
-                to={chosenSendPoint === undefined ? "/lokalizacja" : "/sklep"}
-              />
-            }
-          />
+          <Route path="/" element={<Navigate to={chosenSendPoint === undefined ? "/lokalizacja" : "/sklep"} />}/>
           <Route path="/lokalizacja" element={<LocationChoosing />} />
           <Route path="/sklep" element={<Shop />} />
           <Route path="/produkty" element={<Products />} />
-          <Route path="/lokalizacje" element={<Locations />} />
+          <Route path="/lokalizacja" element={<Locations />} />
+          <Route path="/raporty" element={<Reports />} />
           <Route path="/koszyk" element={<ShoppingCart />} />
           <Route path="/zamowienia" element={<Orders />} />
         </Routes>

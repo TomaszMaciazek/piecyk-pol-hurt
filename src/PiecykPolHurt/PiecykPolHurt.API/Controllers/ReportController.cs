@@ -12,7 +12,7 @@ namespace PiecykPolHurt.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class ReportController : ControllerBase
     {
         private readonly IReportService _reportService;
@@ -23,7 +23,9 @@ namespace PiecykPolHurt.API.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = $"{Policy.Seller},{Policy.Admin},{Policy.Cooperant}")]
+        [Authorize(Policy = Policy.Admin)]
+        [Authorize(Policy = Policy.Cooperant)]
+        [Authorize(Policy = Policy.Seller)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginatedList<ReportListItemDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<PaginatedList<ReportListItemDto>>> GetReports([FromQuery] ReportQuery query)
@@ -74,7 +76,7 @@ namespace PiecykPolHurt.API.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = Policy.Admin)]
+        //[Authorize(Policy = Policy.Admin)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
