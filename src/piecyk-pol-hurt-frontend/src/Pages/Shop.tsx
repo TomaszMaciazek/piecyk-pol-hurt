@@ -3,20 +3,17 @@ import { Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import {
-  getProducts,
-  getTodaysProductsFromSendPoint,
-} from "../API/Endpoints/Product";
+import { getTodaysProductsFromSendPoint } from "../API/Endpoints/Product";
 import { OrderLine } from "../API/Models/Order/OrderLine";
 import { Product } from "../API/Models/Product/Product";
-import { ProductQuery } from "../API/Models/Product/ProductQuery";
+import { ProductSendPointListItemDto } from "../API/Models/Product/ProductSendPointListItemDto";
 import LoadingScreen from "../Common/LoadingScreen";
 import ProductItem from "../Components/ProductItem";
 import { addOrderLines } from "../Redux/Reducers/ShoppingCartReducer";
 import { RootState } from "../Redux/store";
 
 const Shop = () => {
-  const [products, setProducts] = useState<Product[]>();
+  const [products, setProducts] = useState<ProductSendPointListItemDto[]>();
   const { user } = useAuth0();
 
   const sendPointId = useSelector(
@@ -41,21 +38,14 @@ const Shop = () => {
   };
 
   useEffect(() => {
-    const productQuery: ProductQuery = {
-      pageNumber: 1,
-      pageSize: 100,
-    };
-
-    getProducts(productQuery).then((data) => {
-      setProducts(data.items);
-    });
-
     if (sendPointId) {
       getTodaysProductsFromSendPoint(sendPointId).then((data) => {
         console.log(data);
+        
+        setProducts(data);
       });
     }
-  }, []);
+  }, [sendPointId]);
 
   if (!products) {
     return <LoadingScreen />;

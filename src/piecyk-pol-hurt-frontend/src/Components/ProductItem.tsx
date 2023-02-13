@@ -8,11 +8,11 @@ import {
   Button,
 } from "@mui/material";
 import React, { useState } from "react";
-import { Product } from "../API/Models/Product/Product";
+import { ProductSendPointListItemDto } from "../API/Models/Product/ProductSendPointListItemDto";
 import Counter from "../Common/Counter";
 interface IProductItem {
-  product: Product;
-  handleAddToShoppingCart: (product: Product, quantity: number) => void;
+  product: ProductSendPointListItemDto;
+  handleAddToShoppingCart: (product: ProductSendPointListItemDto, quantity: number) => void;
 }
 const ProductItem = ({ product, handleAddToShoppingCart }: IProductItem) => {
   const [count, setCount] = useState<number>(0);

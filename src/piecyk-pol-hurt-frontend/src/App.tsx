@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Navigation from "./Components/Navigation";
 import Shop from "./Pages/Shop";
 import Locations from "./Pages/Locations";
-import { useAuth0, User } from "@auth0/auth0-react";
+import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Products from "./Pages/Products";
@@ -68,10 +68,10 @@ const App = () => {
   }, [isAcccessTokenSet]);
 
   useEffect(() => {
-    if(!isLoading) {
-      dispatch(updatePermission(UserRole.UnloggedUser))
+    if (!isLoading) {
+      dispatch(updatePermission(UserRole.UnloggedUser));
     }
-  }, [isLoading])
+  }, [isLoading]);
 
   if (isLoading || (!isLoading && isAuthenticated && !isAcccessTokenSet)) {
     return <></>;
@@ -82,11 +82,18 @@ const App = () => {
       <Navigation />
       <main>
         <Routes>
-          <Route path="/" element={<Navigate to={chosenSendPoint === undefined ? "/lokalizacja" : "/sklep"} />}/>
-          <Route path="/lokalizacja" element={<LocationChoosing />} />
+          <Route
+            path="/"
+            element={
+              <Navigate
+                to={chosenSendPoint === undefined ? "/lokalizacja" : "/sklep"}
+              />
+            }
+          />
+          <Route path="/zmień-lokalizacje" element={<LocationChoosing />} />
           <Route path="/sklep" element={<Shop />} />
           <Route path="/produkty" element={<Products />} />
-          <Route path="/lokalizacja" element={<Locations />} />
+          <Route path="/lokalizacje" element={<Locations />} />
           <Route path="/raporty" element={<Reports />} />
           <Route path="/koszyk" element={<ShoppingCart />} />
           <Route path="/zamowienia" element={<Orders />} />
