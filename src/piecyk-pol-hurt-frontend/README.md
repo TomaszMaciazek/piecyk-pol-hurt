@@ -7,7 +7,7 @@
 ## To start the app in the development mode you have to run:
 
 ### `npm start`
-## Application will be visible on the http://localhost:3000 in your browser. The page will reload if you make edits. You will also see any lint errors in the console.
+### Application will be visible on the http://localhost:3000 in your browser. The page will reload if you make edits. You will also see any lint errors in the console.
 
 ## Before you start you need fill Object in src/Api.Auth0/Auth0.ts.  All neccessary information you will find in Auth0 site 
 ```json
