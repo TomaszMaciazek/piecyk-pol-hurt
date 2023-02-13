@@ -8,9 +8,12 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { DataGridTranslations } from "../MUI/DataGridTranslations";
 import { TableToolbar } from "../MUI/TableToolbar";
 import LoadingScreen from "../Common/LoadingScreen";
+import GenerateReportModal from "../Components/GenerateReportModal";
 
 const Reports = () => {
-  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [openReportModal, setOpenReportModal] = useState<boolean>(false);
+  const [openGenerateReportModal, setOpenGenerateReportModal] =
+    useState<boolean>(false);
   const [pageIndex, setPageIndex] = useState<number>(0);
   const [itemCount, setItemCount] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(20);
@@ -85,7 +88,7 @@ const Reports = () => {
             onClick={() => {
               const report = reports?.find((item) => item.id === row.id);
               setEditedReportId(report?.id);
-              setOpenModal(true);
+              setOpenReportModal(true);
             }}
           >
             Edytuj
@@ -98,7 +101,15 @@ const Reports = () => {
       flex: 1.2,
       renderCell: (row) => {
         return (
-          <Button variant="contained" color="secondary" onClick={() => {}}>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => {
+              setOpenGenerateReportModal(true);
+              const report = reports?.find((item) => item.id === row.id);
+              setEditedReportId(report?.id);
+            }}
+          >
             Generuj
           </Button>
         );
@@ -113,13 +124,13 @@ const Reports = () => {
   return (
     <>
       <Grid container justifyContent="flex-end" marginBottom={2}>
-        <Button variant="contained" onClick={() => setOpenModal(true)}>
+        <Button variant="contained" onClick={() => setOpenReportModal(true)}>
           Dodaj raport
         </Button>
       </Grid>
       <ReportModal
-        open={openModal}
-        handleClose={() => setOpenModal(false)}
+        open={openReportModal}
+        handleClose={() => setOpenReportModal(false)}
         setRefresh={setRefresh}
         editedReportId={editedReportId}
       />
@@ -145,6 +156,11 @@ const Reports = () => {
           </div>
         </div>
       </div>
+      <GenerateReportModal
+        handleClose={() => setOpenGenerateReportModal(false)}
+        open={openGenerateReportModal}
+        editedReportId={editedReportId}
+      />
     </>
   );
 };

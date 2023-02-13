@@ -60,7 +60,9 @@ namespace PiecykPolHurt.API.Controllers
         }
 
         [HttpGet("page/{id}")]
-        [Authorize(Policy = $"{Policy.Seller},{Policy.Admin},{Policy.Cooperant}")]
+        [Authorize(Policy = Policy.Admin)]
+        [Authorize(Policy = Policy.Cooperant)]
+        [Authorize(Policy = Policy.Seller)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ReportGenerationPageDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ReportGenerationPageDto>> GetReportGenerationPageData([FromRoute] int id)
@@ -98,7 +100,9 @@ namespace PiecykPolHurt.API.Controllers
         }
 
         [HttpPost("generate")]
-        [Authorize(Policy = $"{Policy.Seller},{Policy.Admin},{Policy.Cooperant}")]
+        [Authorize(Policy = Policy.Admin)]
+        [Authorize(Policy = Policy.Seller)]
+        [Authorize(Policy = Policy.Cooperant)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FileContentResult))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]

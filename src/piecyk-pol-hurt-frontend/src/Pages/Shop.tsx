@@ -39,9 +39,7 @@ const Shop = () => {
 
   useEffect(() => {
     if (sendPointId) {
-      getTodaysProductsFromSendPoint(sendPointId).then((data) => {
-        console.log(data);
-        
+      getTodaysProductsFromSendPoint(sendPointId).then((data) => {     
         setProducts(data);
       });
     }

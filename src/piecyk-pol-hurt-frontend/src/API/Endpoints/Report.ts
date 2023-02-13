@@ -19,7 +19,7 @@ const getReports = async (
 const getReportDefinition = async (
   id: number
 ): Promise<ReportDefinitionDto> => {
-  return Client("GET", `${controllerName}/id`);
+  return Client("GET", `${controllerName}/${id}`);
 };
 
 const getReportGenerationPageData = async (
@@ -34,8 +34,11 @@ const addReport = async (
   return Client("POST", controllerName, { body });
 };
 
-const generateReport = async (body: GeneratorQuery): Promise<null> => {
-  return Client("POST", `${controllerName}/generate`, { body });
+const generateReport = async (body: GeneratorQuery): Promise<any> => {
+  return Client("POST", `${controllerName}/generate`, {
+    body: body,
+    responseIsBlob: true,
+  });
 };
 
 const updateReport = async (

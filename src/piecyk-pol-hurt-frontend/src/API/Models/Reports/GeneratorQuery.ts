@@ -1,10 +1,7 @@
-export interface GeneratorQuery {
-  reportId: number;
-  maxRows?: number;
-  paramsValue: GeneretorParamValue[];
-}
+import { GeneratorParamValue } from "./GeneratorParamValue";
 
-export interface GeneretorParamValue {
-  key: string;
-  values: string[];
+export interface GeneratorQuery {
+  reportid: number;
+  maxRows?: number;
+  ParamsValues: GeneratorParamValue[];
 }
