@@ -23,6 +23,7 @@ namespace PiecykPolHurt.API.Controllers
             _user = user;
         }
 
+        [Authorize(Policy = Policy.Admin)]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginatedList<OrderListItemDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -76,7 +77,6 @@ namespace PiecykPolHurt.API.Controllers
 
 
         [HttpPost]
-        [Authorize(Policy = Policy.Customer)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -164,7 +164,6 @@ namespace PiecykPolHurt.API.Controllers
         }
 
         [HttpPatch("cancel/{id}")]
-        [Authorize(Policy = Policy.Customer)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]

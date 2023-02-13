@@ -59,6 +59,7 @@ namespace PiecykPolHurt.API.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpGet("active")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<SendPointDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
