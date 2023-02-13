@@ -2,10 +2,12 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { PERSIST, persistReducer } from "redux-persist";
 import persistStore from "redux-persist/es/persistStore";
 import storage from "redux-persist/lib/storage";
+import OrderReducer from "./Reducers/OrderReducer";
 import ShoppingCartReducer from "./Reducers/ShoppingCartReducer";
 
 const reducers = combineReducers({
   shoppingCarts: ShoppingCartReducer,
+  orders: OrderReducer,
 });
 
 const persistConfig = {

@@ -4,9 +4,8 @@ using PiecykPolHurt.API.Authorization;
 
 namespace PiecykPolHurt.API.Controllers;
 
-[Authorize]
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class UserController : ControllerBase
 {
     private readonly IUser _user;

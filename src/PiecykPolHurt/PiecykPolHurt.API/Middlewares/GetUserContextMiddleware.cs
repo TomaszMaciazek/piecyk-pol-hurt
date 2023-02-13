@@ -38,7 +38,7 @@ public class GetUserContextMiddleware
     }
     private async Task<int> CheckIfUserShouldBeAddedToDb(string userEmail)
     {
-        var addUserQuery = $"INSERT INTO Users (Email) VALUES ({userEmail})";
+        var addUserQuery = $"INSERT INTO Users (Email) VALUES ('{userEmail}')";
         var getUserQuery = $"SELECT Id, Email From Users WHERE Email = '{userEmail}'";
 
         await using var connection = new SqlConnection(_connectionString);

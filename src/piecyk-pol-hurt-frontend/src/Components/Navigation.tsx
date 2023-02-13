@@ -35,14 +35,8 @@ const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
 }));
 
 const Navigation = () => {
-  const pages = [
-    "Sklep",
-    "Produkty",
-    "Lokacje",
-    "Raporty",
-    "Zmień lokalizację",
-  ];
-  const links = ["sklep", "produkty", "lokalizacje", "raporty", "zmień-lokalizacje"];
+  const pages = ["Sklep", "Produkty", "Lokacje", 'Zmień lokalizację', "Zamówienia", "Raporty"];
+  const links = ["sklep", "produkty", "lokalizacje", 'zmień-lokalizacje', 'zamowienia', "raporty"];
   const [drawerOpen, setDrawerOpen] = useState(false);
   const navigate = useNavigate();
 
