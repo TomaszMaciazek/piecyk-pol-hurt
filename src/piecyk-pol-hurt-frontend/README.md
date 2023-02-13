@@ -14,8 +14,8 @@
 {
   "domain": "DOMAIN",
   "audience": "AUDIENCE",
-  "clientID": "CLIENT_ID,
-  "scope": 'openid email profile',
+  "clientID": "CLIENT_ID",
+  "scope": "openid email profile",
 }
 ```
 
