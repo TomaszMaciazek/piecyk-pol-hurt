@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PiecykPolHurt.API.Authorization;
 using PiecykPolHurt.ApplicationLogic.Result;
 using PiecykPolHurt.ApplicationLogic.Services;
@@ -10,6 +11,7 @@ namespace PiecykPolHurt.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class OrderController : ControllerBase
     {
         private readonly IOrderService _orderService;
@@ -21,6 +23,7 @@ namespace PiecykPolHurt.API.Controllers
             _user = user;
         }
 
+        [Authorize(Policy = Policy.Admin)]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginatedList<OrderListItemDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -29,6 +32,21 @@ namespace PiecykPolHurt.API.Controllers
             try
             {
                 return Ok(await _orderService.GetOrders(query));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("buyer/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginatedList<OrderListItemDto>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<PaginatedList<OrderListItemDto>>> GetOrdersFromUser([FromRoute] int id, [FromQuery] OrderQuery query)
+        {
+            try
+            {
+                return Ok(await _orderService.GetOrders(query, id));
             }
             catch (Exception ex)
             {
@@ -80,6 +98,7 @@ namespace PiecykPolHurt.API.Controllers
         }
 
         [HttpPut("approve")]
+        [Authorize(Policy = Policy.Seller)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -101,10 +120,11 @@ namespace PiecykPolHurt.API.Controllers
         }
 
         [HttpPatch("reject/{id}")]
+        [Authorize(Policy = Policy.Seller)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<ActionResult<bool>> RejectOrder([FromQuery] int id)
+        public async Task<ActionResult<bool>> RejectOrder([FromRoute] int id)
         {
             try
             {
@@ -122,10 +142,11 @@ namespace PiecykPolHurt.API.Controllers
         }
 
         [HttpPatch("finish/{id}")]
+        [Authorize(Policy = Policy.Seller)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<ActionResult<bool>> FinishOrder([FromQuery] int id)
+        public async Task<ActionResult<bool>> FinishOrder([FromRoute] int id)
         {
             try
             {
@@ -146,7 +167,7 @@ namespace PiecykPolHurt.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<ActionResult<bool>> CancelOrder([FromQuery] int id)
+        public async Task<ActionResult<bool>> CancelOrder([FromRoute] int id)
         {
             try
             {

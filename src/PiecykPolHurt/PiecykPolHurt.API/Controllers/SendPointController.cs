@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using PiecykPolHurt.API.Authorization;
 using PiecykPolHurt.ApplicationLogic.Result;
 using PiecykPolHurt.ApplicationLogic.Services;
 using PiecykPolHurt.Model.Commands;
@@ -9,6 +11,7 @@ namespace PiecykPolHurt.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class SendPointController : ControllerBase
     {
         private readonly ISendPointService _sendPointService;
@@ -19,6 +22,7 @@ namespace PiecykPolHurt.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = Policy.Admin)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginatedList<SendPointListItemDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<PaginatedList<SendPointListItemDto>>> GetSendPoints([FromQuery] SendPointQuery query)
@@ -34,6 +38,7 @@ namespace PiecykPolHurt.API.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Policy = Policy.Admin)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SendPointDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -54,6 +59,7 @@ namespace PiecykPolHurt.API.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpGet("active")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<SendPointDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -85,6 +91,7 @@ namespace PiecykPolHurt.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = Policy.Admin)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -106,6 +113,7 @@ namespace PiecykPolHurt.API.Controllers
         }
 
         [HttpPut]
+        [Authorize(Policy = Policy.Admin)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -127,6 +135,7 @@ namespace PiecykPolHurt.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Policy = Policy.Admin)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]

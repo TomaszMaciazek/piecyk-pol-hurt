@@ -20,7 +20,7 @@ namespace PiecykPolHurt.ApplicationLogic.Services
         Task<bool> CreateOrderAsync(CreateOrderCommand model, int userId, string userEmail);
         Task<bool> FinishOrderAsync(int id, string userEmail);
         Task<OrderDto> GetOrderById(int id);
-        Task<PaginatedList<OrderListItemDto>> GetOrders(OrderQuery query);
+        Task<PaginatedList<OrderListItemDto>> GetOrders(OrderQuery query, int? buyerId = null);
         Task<bool> RejectOrderAsync(int id, string userEmail);
         Task<bool> SetReceptionDateAsync(int id, DateTime date, string userEmail);
     }
@@ -38,13 +38,18 @@ namespace PiecykPolHurt.ApplicationLogic.Services
             _createValidator = createValidator;
         }
 
-        public async Task<PaginatedList<OrderListItemDto>> GetOrders(OrderQuery query)
+        public async Task<PaginatedList<OrderListItemDto>> GetOrders(OrderQuery query, int? buyerId = null)
         {
             var orders = _unitOfWork.OrderRepository.GetAll()
                 .Include(x => x.Buyer)
                 .Include(x => x.SendPoint)
                 .Include(x => x.Lines).ThenInclude(x => x.Product)
                 .AsNoTracking();
+
+            if (buyerId.HasValue)
+            {
+                orders = orders.Where(x => x.BuyerId == buyerId.Value);
+            }
 
             if (query.SendPoints != null && query.SendPoints.Any())
             {
@@ -106,6 +111,9 @@ namespace PiecykPolHurt.ApplicationLogic.Services
                         Status = Model.Enums.OrderStatus.Sent,
                         Lines = new List<OrderLine>()
                     };
+
+                    var today = DateTime.Now.Date;
+
                     foreach (var line in model.Lines)
                     {
                         order.Lines.Add(new OrderLine
@@ -118,7 +126,9 @@ namespace PiecykPolHurt.ApplicationLogic.Services
                             OrderId = 0
                         });
 
+
                         var productSendPoint = await _unitOfWork.ProductSendPointRepository.GetAll()
+                            .Where(x => x.ForDate.Date == today)
                             .FirstOrDefaultAsync(x => x.ProductId == line.ProductId && x.SendPointId == order.SendPointId);
 
                         if(productSendPoint.AvailableQuantity - line.ItemsQuantity < 0)
@@ -196,12 +206,13 @@ namespace PiecykPolHurt.ApplicationLogic.Services
                         order.Modified = DateTime.Now;
                         order.ModifiedBy = userEmail;
                         _unitOfWork.OrderRepository.Update(order);
-                        if(order.Created.Date == DateTime.Now.Date) {
+                        var today = DateTime.Now.Date;
+                        if (order.Created.Date == today) {
                             foreach (var line in order.Lines)
                             {
                                 var productSendPoint = await _unitOfWork.ProductSendPointRepository.GetAll()
+                                .Where(x => x.ForDate.Date == today)
                                 .FirstOrDefaultAsync(x => x.ProductId == line.ProductId && x.SendPointId == order.SendPointId);
-
                                 productSendPoint.AvailableQuantity += line.ItemsQuantity;
                                 _unitOfWork.ProductSendPointRepository.Update(productSendPoint);
                             }
