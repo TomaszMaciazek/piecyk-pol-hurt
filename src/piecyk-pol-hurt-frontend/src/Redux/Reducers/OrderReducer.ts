@@ -1,23 +1,25 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { UserRole } from "../../Constants/Enums/UserRole";
 
 export interface IPermissionsState {
-    shoppingCarts: string;
-  }
+  permissions?: UserRole;
+}
 
 const initialState: IPermissionsState = {
-    shoppingCarts: '',
-  };
+  permissions: undefined,
+};
 
 export const orderSlice = createSlice({
-    name: "Orders",
-    initialState,
-    reducers:{
-        
-    }
-})
+  name: "Orders",
+  initialState,
+  reducers: {
+    updatePermission: (state, action: PayloadAction<UserRole>) => {
+        console.log(action.payload)
 
+      state.permissions = action.payload
+    },
+  },
+});
 
-export const {
-    updatePermission
-  } = orderSlice.actions;
+export const { updatePermission } = orderSlice.actions;
 export default orderSlice.reducer;
