@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using PiecykPolHurt.API.Extensions;
 using PiecykPolHurt.ApplicationLogic;
 using PiecykPolHurt.DataLayer;
+using PiecykPolHurt.EmailService;
 using PiecykPolHurt.Mappings;
 using PiecykPolHurt.Validation;
 
@@ -31,6 +32,7 @@ builder.Services.AddDataLayer(builder.Configuration);
 builder.Services.AddMappings();
 builder.Services.AddValidation();
 builder.Services.AddLogic();
+builder.Services.AddEmailService(builder.Configuration);
 
 var app = builder.Build();
 
