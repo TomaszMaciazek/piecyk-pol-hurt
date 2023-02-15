@@ -10,3 +10,19 @@ This module consist of following project:
  * Validation project - containing validator classes created with FluentValidation library
 
 In order to run application correctly it is required to start API and DataImport projects.
+
+Before you run projects you need fill data in appsettings.json 
+```json
+{
+  "Auth": {
+   "Domain": "AUTH0_DOMAIN",
+   "Audience": "AUTH_AUDIENCE"
+  },
+  "ConnectionStrings": {
+    "DefaultConnection": "CONNECTION_STRING"
+  },
+  "Azure": {
+    "SendEmailUrl": "AZURE_LOGIC_APP_EMAIL_URL"
+  }
+}
+```
