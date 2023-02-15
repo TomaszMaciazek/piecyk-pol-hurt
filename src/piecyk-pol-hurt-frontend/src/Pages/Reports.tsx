@@ -1,6 +1,6 @@
 import { Button, Grid, Typography } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
-import { getReports } from "../API/Endpoints/Report";
+import { getReportDefinition, getReports } from "../API/Endpoints/Report";
 import { ReportListItemDto } from "../API/Models/Reports/ReportListItemDto";
 import { ReportQuery } from "../API/Models/Reports/ReportQuery";
 import ReportModal from "../Components/ReportModal";
@@ -9,6 +9,10 @@ import { DataGridTranslations } from "../MUI/DataGridTranslations";
 import { TableToolbar } from "../MUI/TableToolbar";
 import LoadingScreen from "../Common/LoadingScreen";
 import GenerateReportModal from "../Components/GenerateReportModal";
+import { ReportDefinitionDto } from "../API/Models/Reports/ReportDefinitionDto";
+import { UserRole } from "../Constants/Enums/UserRole";
+import { RootState } from "../Redux/store";
+import { useSelector } from "react-redux";
 
 const Reports = () => {
   const [openReportModal, setOpenReportModal] = useState<boolean>(false);
@@ -19,8 +23,14 @@ const Reports = () => {
   const [pageSize, setPageSize] = useState<number>(20);
   const [refresh, setRefresh] = useState<boolean>(false);
   const [reports, setReports] = useState<ReportListItemDto[]>();
-  const [editedReportId, setEditedReportId] = useState<number | undefined>(
+  const [clickedReportId, setClickedReportId] = useState<number | undefined>(
     undefined
+  );
+  const [editedReport, setEditedReport] = useState<
+    ReportDefinitionDto | undefined
+  >();
+  const permissions = useSelector(
+    (state: RootState) => state.orders.permissions
   );
 
   const getReportsFromApi = useCallback(() => {
@@ -79,24 +89,6 @@ const Reports = () => {
       },
     },
     {
-      field: "Edycja",
-      flex: 1.2,
-      renderCell: (row) => {
-        return (
-          <Button
-            variant="contained"
-            onClick={() => {
-              const report = reports?.find((item) => item.id === row.id);
-              setEditedReportId(report?.id);
-              setOpenReportModal(true);
-            }}
-          >
-            Edytuj
-          </Button>
-        );
-      },
-    },
-    {
       field: "Raport",
       flex: 1.2,
       renderCell: (row) => {
@@ -107,7 +99,7 @@ const Reports = () => {
             onClick={() => {
               setOpenGenerateReportModal(true);
               const report = reports?.find((item) => item.id === row.id);
-              setEditedReportId(report?.id);
+              setClickedReportId(report?.id);
             }}
           >
             Generuj
@@ -117,22 +109,50 @@ const Reports = () => {
     },
   ];
 
+  if (permissions === UserRole.Admin) {
+    columns.push({
+      field: "edit",
+      flex: 1.2,
+      renderCell: (row) => {
+        return (
+          <Button
+            variant="contained"
+            onClick={() => {
+              const report = reports?.find((item) => item.id === row.id);
+              if (!report) {
+                return;
+              }
+              getReportDefinition(report.id).then((data) => {
+                setEditedReport(data);
+                setOpenReportModal(true);
+              });
+            }}
+          >
+            Edytuj
+          </Button>
+        );
+      },
+    });
+  }
+
   if (!reports) {
     return <LoadingScreen />;
   }
 
   return (
     <>
-      <Grid container justifyContent="flex-end" marginBottom={2}>
-        <Button variant="contained" onClick={() => setOpenReportModal(true)}>
-          Dodaj raport
-        </Button>
-      </Grid>
+      {permissions === UserRole.Admin && (
+        <Grid container justifyContent="flex-end" marginBottom={2}>
+          <Button variant="contained" onClick={() => setOpenReportModal(true)}>
+            Dodaj raport
+          </Button>
+        </Grid>
+      )}
       <ReportModal
         open={openReportModal}
         handleClose={() => setOpenReportModal(false)}
         setRefresh={setRefresh}
-        editedReportId={editedReportId}
+        report={editedReport}
       />
       <div style={{ height: 400, width: "100%" }}>
         <div style={{ display: "flex", height: "100%" }}>
@@ -159,7 +179,7 @@ const Reports = () => {
       <GenerateReportModal
         handleClose={() => setOpenGenerateReportModal(false)}
         open={openGenerateReportModal}
-        editedReportId={editedReportId}
+        editedReportId={clickedReportId}
       />
     </>
   );

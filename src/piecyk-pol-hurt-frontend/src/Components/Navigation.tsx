@@ -16,7 +16,7 @@ import {
   BadgeProps,
   styled,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate } from "react-router-dom";
@@ -24,6 +24,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useSelector } from "react-redux";
 import { RootState } from "../Redux/store";
+import { UserRole } from "../Constants/Enums/UserRole";
 
 const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -35,8 +36,32 @@ const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
 }));
 
 const Navigation = () => {
-  const pages = ["Sklep", "Produkty", "Lokacje", 'Zmień lokalizację', "Zamówienia", "Raporty"];
-  const links = ["sklep", "produkty", "lokalizacje", 'zmień-lokalizacje', 'zamowienia', "raporty"];
+  const permission = useSelector((state: RootState) => state.orders.permissions);
+
+  const [pages, setPages] = useState<string[]>([]);
+  const [links, setLinks] = useState<string[]>([]);
+
+  useEffect (() => {
+    const newPages = ["Sklep", 'Zmień lokalizację'];
+    const newLinks = ["sklep", 'zmień-lokalizacje'];
+
+    if (permission === UserRole.Admin) {
+      newPages.push('produkty', 'Lokalizacje');
+      newLinks.push('produkty', 'lokalizacje');
+    }
+    if (permission !== UserRole.LoggedUser && permission !== UserRole.UnloggedUser) {
+      newPages.push('Raporty');
+      newLinks.push('raporty');
+    }
+    if (permission === UserRole.Seller || permission === UserRole.LoggedUser) {
+      newLinks.push("Zamówienia");
+      newLinks.push("zamówienia")
+    }
+
+    setPages(newPages);
+    setLinks(newLinks);
+  }, [permission]);
+
   const [drawerOpen, setDrawerOpen] = useState(false);
   const navigate = useNavigate();
 

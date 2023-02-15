@@ -92,7 +92,7 @@ const Products = () => {
       },
     },
     {
-      field: "Edycja",
+      field: "edit",
       flex: 1.2,
       renderCell: (row) => {
         return (
@@ -111,7 +111,7 @@ const Products = () => {
       },
     },
     {
-      field: "Usuwanie",
+      field: "delete",
       flex: 1.2,
       renderCell: (row) => {
         return (

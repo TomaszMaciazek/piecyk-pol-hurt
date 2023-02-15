@@ -20,6 +20,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\PiecykPolHurt.ApplicationLogic\PiecykPolHurt.ApplicationLogic.csproj" />
+      <ProjectReference Include="..\PiecykPolHurt.EmailService\PiecykPolHurt.EmailService.csproj" />
       <ProjectReference Include="..\PiecykPolHurt.Mappings\PiecykPolHurt.Mappings.csproj" />
       <ProjectReference Include="..\PiecykPolHurt.Validation\PiecykPolHurt.Validation.csproj" />
     </ItemGroup>

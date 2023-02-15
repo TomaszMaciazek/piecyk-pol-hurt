@@ -101,7 +101,7 @@ const Locations = () => {
       },
     },
     {
-      field: "Edycja",
+      field: "edit",
       flex: 1.2,
       renderCell: (row) => {
         return (
@@ -120,7 +120,7 @@ const Locations = () => {
       },
     },
     {
-      field: "Usuwanie",
+      field: "delete",
       flex: 1.2,
       renderCell: (row) => {
         return (

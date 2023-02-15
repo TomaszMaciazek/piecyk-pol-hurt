@@ -101,7 +101,7 @@ namespace PiecykPolHurt.ApplicationLogic.Services
             if (validationResult.IsValid)
             {
                 var notificationTemplate = await _unitOfWork.NotificationTypeRepository.GetByType(NotificationType.OrderCreated).FirstOrDefaultAsync();
-                if(notificationTemplate != null)
+                if(notificationTemplate == null)
                 {
                     return false;
                 }

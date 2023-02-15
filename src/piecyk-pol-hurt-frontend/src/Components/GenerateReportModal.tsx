@@ -1,5 +1,5 @@
 import { Modal, Box, Button, TextField, Select, MenuItem } from "@mui/material";
-import { DatePicker, DesktopDatePicker } from "@mui/x-date-pickers";
+import { DesktopDatePicker } from "@mui/x-date-pickers";
 import { useEffect, useState } from "react";
 import {
   generateReport,
@@ -35,20 +35,37 @@ const GenerateReportModal = ({
     const query: GeneratorQuery = {
       reportid: editedReportId,
       maxRows: maxRows,
-      ParamsValues: [
-        {
-          key: "dateFrom",
-          values: ["2023-02-13"],
-        },
-      ],
+      ParamsValues:paramValues
     };
+    console.log(paramValues);
 
     generateReport(query).then((fileBlob) => {
+      const date = paramValues.find((item) => item.key === "dateFrom");
+      if (!date) {
+        return;
+      }
+
       const link = document.createElement("a");
       link.href = window.URL.createObjectURL(fileBlob);
-      link.download = `raport_$${new Date().toLocaleDateString()}.xlsx`;
+      link.download = `raport_$${date.values[0]}.xlsx`;
       link.click();
     });
+  };
+
+  const handleChangeGeneratorParams = (key: string, values: string[]) => {
+    const paramValuesCopy = [...paramValues];
+    const index = paramValuesCopy.findIndex((item) => item.key === key);
+
+    if (index === -1) {
+      const paramValue: GeneratorParamValue = {
+        key: key,
+        values: values,
+      };
+      paramValuesCopy.push(paramValue);
+    } else {
+      paramValuesCopy[index].values = values;
+    }
+    setParamValues(paramValuesCopy);
   };
 
   const onClose = () => {
@@ -82,13 +99,23 @@ const GenerateReportModal = ({
             const inputs: any[] = [];
             if (item.type === ParamType.Dis || item.type === ParamType.Lst) {
               inputs.push(
-                <>
+                <div key={item.name}>
                   <span>{item.caption}</span>
                   <Select
                     sx={{ mb: 2 }}
                     required={item.isRequired}
                     fullWidth
-                    onChange={(e) => console.log(e.target.value)}
+                    onChange={(e) =>
+                      handleChangeGeneratorParams(
+                        item.name,
+                        e.target.value as string[]
+                      )
+                    }
+                    value={
+                      paramValues.find((param) => param.key === item.name)
+                        ?.values ?? []
+                    }
+                    multiple
                   >
                     {item.availableValues.map((item) => (
                       <MenuItem key={item.value} value={item.value}>
@@ -96,7 +123,7 @@ const GenerateReportModal = ({
                       </MenuItem>
                     ))}
                   </Select>
-                </>
+                </div>
               );
             } else if (item.type === ParamType.Lik) {
               inputs.push(<TextField label={item.name} />);
@@ -104,8 +131,13 @@ const GenerateReportModal = ({
               inputs.push(
                 <DesktopDatePicker
                   label="Data"
-                  value={new Date()}
-                  onChange={() => undefined}
+                  value={paramValues.find((param) => param.key === item.name)?.values[0] ?? new Date()}
+                  onChange={(date) => {
+                    if (!date) {
+                      return;
+                    }
+                    handleChangeGeneratorParams(item.name, [new Date(date).toISOString().split('T')[0]])                   
+                  }}
                   renderInput={(params: any) => (
                     <TextField sx={{ mb: 2 }} {...params} />
                   )}

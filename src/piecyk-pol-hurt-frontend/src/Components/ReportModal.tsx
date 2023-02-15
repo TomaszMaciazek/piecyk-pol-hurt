@@ -1,8 +1,8 @@
 import { Modal, Box, Button } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import { toast } from "react-toastify";
-import { addReport, getReportDefinition } from "../API/Endpoints/Report";
+import { addReport } from "../API/Endpoints/Report";
 import { CreateReportDefinitionCommand } from "../API/Models/Reports/CreateReportDefinitionCommand";
 import { ReportDefinitionDto } from "../API/Models/Reports/ReportDefinitionDto";
 import { ModalStyle } from "../Styles/ModalStyles";
@@ -10,19 +10,16 @@ import { ModalStyle } from "../Styles/ModalStyles";
 interface IReportModal {
   open: boolean;
   handleClose: () => void;
-  editedReportId: number | undefined;
+  report: ReportDefinitionDto | undefined;
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ReportModal = ({
   open,
   handleClose,
-  editedReportId,
+  report,
   setRefresh,
 }: IReportModal) => {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [report, setReport] = useState<ReportDefinitionDto>();
-
   const submitReport = (data: CreateReportDefinitionCommand) => {    
     addReport(data).then((result) => {
       if (result) {
@@ -33,18 +30,6 @@ const ReportModal = ({
     });
   };
 
-  useEffect (() => {    
-   if (editedReportId) {
-    getReportDefinition(editedReportId).then((data) => setReport(data));
-   } else {
-    setIsLoading(false)
-   }
-  }, [editedReportId]);
-
-  if (isLoading) {
-    return <></>;
-  }
-
   return (
     <Modal
       open={open}
@@ -53,7 +38,7 @@ const ReportModal = ({
       aria-describedby="parent-modal-description"
     >
       <Box sx={{ ...ModalStyle, width: 600, height: "90%", overflow: "auto" }}>
-        <h2>{editedReportId ? 'Edycja' : 'Tworzenie raportu'}</h2>
+        <h2>{report ? 'Edycja' : 'Tworzenie raportu'}</h2>
         <FormContainer onSuccess={submitReport} defaultValues={{
           description: report ? report.description : '',
           group: report ? report.group : '',
