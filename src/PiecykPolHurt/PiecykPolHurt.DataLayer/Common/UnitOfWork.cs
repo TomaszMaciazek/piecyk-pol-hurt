@@ -12,9 +12,11 @@ namespace PiecykPolHurt.DataLayer.Common
         public IProductRepository ProductRepository { get; private set; }
         public IOrderRepository OrderRepository { get; private set; }
         public ISendPointRepository SendPointRepository { get; private set; }
-        public IDictionaryValueRepository DictionaryValueRepository { get; set; }
-        public IReportDefinitionRepository ReportDefinitionRepository { get; set; }
-        public IProductSendPointRepository ProductSendPointRepository { get; set; }
+        public IDictionaryValueRepository DictionaryValueRepository { get; private set; }
+        public IReportDefinitionRepository ReportDefinitionRepository { get; private set; }
+        public IProductSendPointRepository ProductSendPointRepository { get; private set; }
+        public INotificationTemplateRepository NotificationTypeRepository { get; private set; }
+        public IUserRepository UserRepository { get; private set; }
 
         public string ConnectionString { get => 
                 !string.IsNullOrEmpty(_context.Database.GetConnectionString())
@@ -29,6 +31,8 @@ namespace PiecykPolHurt.DataLayer.Common
             DictionaryValueRepository = new DictionaryValueRepository(_context);
             ReportDefinitionRepository = new ReportDefinitionRepository(_context);
             ProductSendPointRepository = new ProductSendPointRepository(_context);
+            NotificationTypeRepository= new NotificationTemplateRepository(_context);
+            UserRepository = new UserRepository(_context);
         }
 
         public async Task SaveChangesAsync()

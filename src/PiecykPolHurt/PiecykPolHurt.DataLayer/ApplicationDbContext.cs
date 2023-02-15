@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PiecykPolHurt.Model.Entities;
+using PiecykPolHurt.Model.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace PiecykPolHurt.DataLayer
         public DbSet<DictionaryType> DictionaryTypes { get; set; }
         public DbSet<DictionaryValue> DictionaryValues { get; set; }
         public DbSet<ReportDefinition> ReportDefinitions { get; set; }
+        public DbSet<NotificationTemplate> NotificationTemplates { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -81,6 +83,45 @@ namespace PiecykPolHurt.DataLayer
                     new DictionaryValue { Id = 3, DictionaryTypeId = 1, Value = 2, Description = "Zaakceptowane" },
                     new DictionaryValue { Id = 4, DictionaryTypeId = 1, Value = 3, Description = "Anulowane" },
                     new DictionaryValue { Id = 5, DictionaryTypeId = 1, Value = 4, Description = "Zakończone" }
+                );
+
+            builder.Entity<NotificationTemplate>()
+                .HasData(
+                    new NotificationTemplate
+                    {
+                        Id = 1,
+                        Type = NotificationType.OrderApproved,
+                        Subject = "Zamówienie nr. {0} zostło zaakceptowane",
+                        Body = "Zamówienie o numerze {0} zostało zaakceptowane"
+                    },
+                    new NotificationTemplate
+                    {
+                        Id = 2,
+                        Type = NotificationType.OrderRejected,
+                        Subject = "Zamówienie nr. {0} zostło odrzucone",
+                        Body = "Zamówienie o numerze {0} zostało odrzucone"
+                    },
+                    new NotificationTemplate
+                    {
+                        Id = 3,
+                        Type = NotificationType.OrderCanceled,
+                        Subject = "Zamówienie nr. {0} zostło anulowane",
+                        Body = "Zamówienie o numerze {0} zostało anulowane"
+                    },
+                    new NotificationTemplate
+                    {
+                        Id = 4,
+                        Type = NotificationType.OrderFinished,
+                        Subject = "Zamówienie nr. {0} zostło zrealizowane",
+                        Body = "Zamówienie o numerze {0} zostało zrealizowane"
+                    },
+                    new NotificationTemplate
+                    {
+                        Id = 5,
+                        Type = NotificationType.OrderCreated,
+                        Subject = "Utworzono nowe zamówienie",
+                        Body = "Utworzono nowe zamówienie. Jego numer to {0}"
+                    }
                 );
         }
     }

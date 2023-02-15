@@ -5,11 +5,13 @@ using Microsoft.EntityFrameworkCore;
 using PiecykPolHurt.ApplicationLogic.Extensions;
 using PiecykPolHurt.ApplicationLogic.Result;
 using PiecykPolHurt.DataLayer.Common;
+using PiecykPolHurt.EmailService;
 using PiecykPolHurt.Model.Commands;
 using PiecykPolHurt.Model.Dto.Order;
 using PiecykPolHurt.Model.Entities;
 using PiecykPolHurt.Model.Enums;
 using PiecykPolHurt.Model.Queries;
+using System;
 
 namespace PiecykPolHurt.ApplicationLogic.Services
 {
@@ -30,12 +32,14 @@ namespace PiecykPolHurt.ApplicationLogic.Services
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IValidator<CreateOrderCommand> _createValidator;
+        private readonly IEmailService _emailService;
 
-        public OrderService(IMapper mapper, IUnitOfWork unitOfWork, IValidator<CreateOrderCommand> createValidator)
+        public OrderService(IMapper mapper, IUnitOfWork unitOfWork, IValidator<CreateOrderCommand> createValidator, IEmailService emailService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _createValidator = createValidator;
+            _emailService = emailService;
         }
 
         public async Task<PaginatedList<OrderListItemDto>> GetOrders(OrderQuery query, int? buyerId = null)
@@ -96,6 +100,13 @@ namespace PiecykPolHurt.ApplicationLogic.Services
             var validationResult = await _createValidator.ValidateAsync(model);
             if (validationResult.IsValid)
             {
+                var notificationTemplate = await _unitOfWork.NotificationTypeRepository.GetByType(NotificationType.OrderCreated).FirstOrDefaultAsync();
+                if(notificationTemplate != null)
+                {
+                    return false;
+                }
+                var mail = new SendEmailRequest { To = userEmail, Subject = notificationTemplate.Subject };
+
                 using var transaction = await _unitOfWork.BeginTransactionAsync();
                 try
                 {
@@ -108,7 +119,7 @@ namespace PiecykPolHurt.ApplicationLogic.Services
                         Created = DateTime.Now,
                         CreatedBy = userEmail,
                         SendPointId = model.SendPointId,
-                        Status = Model.Enums.OrderStatus.Sent,
+                        Status = OrderStatus.Sent,
                         Lines = new List<OrderLine>()
                     };
 
@@ -141,12 +152,14 @@ namespace PiecykPolHurt.ApplicationLogic.Services
                     _unitOfWork.OrderRepository.Add(order);
                     await _unitOfWork.SaveChangesAsync();
                     await transaction.CommitAsync();
+                    mail.Content = string.Format(notificationTemplate.Body, order.Id);
                 }
                 catch (Exception)
                 {
                     await transaction.RollbackAsync();
                     throw;
                 }
+                await _emailService.SendEmail(mail);
                 return true;
             }
             return false;
@@ -174,19 +187,38 @@ namespace PiecykPolHurt.ApplicationLogic.Services
         {
             if (command.Id != 0)
             {
+                using var transaction = await _unitOfWork.BeginTransactionAsync();
                 var order = await _unitOfWork.OrderRepository.GetById(command.Id).FirstOrDefaultAsync();
-                if (order != null)
+                var notificationTemplate = await _unitOfWork.NotificationTypeRepository.GetByType(NotificationType.OrderApproved).FirstOrDefaultAsync();
+                if (order != null && notificationTemplate != null)
                 {
-                    order.Status = OrderStatus.Approved;
-                    order.Modified = DateTime.Now;
-                    order.ModifiedBy = userEmail;
-                    if (command.ReceptionDate.HasValue)
+                    var buyer = await _unitOfWork.UserRepository.GetById(order.BuyerId).AsNoTracking().FirstOrDefaultAsync();
+                    try
                     {
-                        order.ReceptionDate = command.ReceptionDate.Value;
+
+                        order.Status = OrderStatus.Approved;
+                        order.Modified = DateTime.Now;
+                        order.ModifiedBy = userEmail;
+                        if (command.ReceptionDate.HasValue)
+                        {
+                            order.ReceptionDate = command.ReceptionDate.Value;
+                        }
+                        _unitOfWork.OrderRepository.Update(order);
+                        await _unitOfWork.SaveChangesAsync();
+                        await _emailService.SendEmail(new SendEmailRequest
+                        {
+                            To = buyer.Email,
+                            Subject = string.Format(notificationTemplate.Subject, order.Id),
+                            Content = string.Format(notificationTemplate.Body, order.Id)
+                        });
+                        await transaction.CommitAsync();
+                        return true;
                     }
-                    _unitOfWork.OrderRepository.Update(order);
-                    await _unitOfWork.SaveChangesAsync();
-                    return true;
+                    catch(Exception)
+                    {
+                        await transaction.RollbackAsync();
+                        throw;
+                    }
                 }
             }
             return false;
@@ -200,8 +232,10 @@ namespace PiecykPolHurt.ApplicationLogic.Services
                 try
                 {
                     var order = await _unitOfWork.OrderRepository.GetById(id).Include(x => x.Lines).FirstOrDefaultAsync();
-                    if (order != null)
+                    var notificationTemplate = await _unitOfWork.NotificationTypeRepository.GetByType(NotificationType.OrderRejected).FirstOrDefaultAsync();
+                    if (order != null && notificationTemplate != null)
                     {
+                        var buyer = await _unitOfWork.UserRepository.GetById(order.BuyerId).AsNoTracking().FirstOrDefaultAsync();
                         order.Status = OrderStatus.Rejected;
                         order.Modified = DateTime.Now;
                         order.ModifiedBy = userEmail;
@@ -218,6 +252,12 @@ namespace PiecykPolHurt.ApplicationLogic.Services
                             }
                         }
                         await _unitOfWork.SaveChangesAsync();
+                        await _emailService.SendEmail(new SendEmailRequest
+                        {
+                            To = buyer.Email,
+                            Subject = string.Format(notificationTemplate.Subject, order.Id),
+                            Content = string.Format(notificationTemplate.Body, order.Id)
+                        });
                         await transaction.CommitAsync();
                         return true;
                     }
@@ -235,15 +275,33 @@ namespace PiecykPolHurt.ApplicationLogic.Services
         {
             if (id != 0)
             {
+                using var transaction = await _unitOfWork.BeginTransactionAsync();
+                var notificationTemplate = await _unitOfWork.NotificationTypeRepository.GetByType(NotificationType.OrderFinished).FirstOrDefaultAsync();
                 var order = await _unitOfWork.OrderRepository.GetById(id).FirstOrDefaultAsync();
-                if (order != null)
+                if (order != null && notificationTemplate != null)
                 {
-                    order.Status = OrderStatus.Finished;
-                    order.Modified = DateTime.Now;
-                    order.ModifiedBy = userEmail;
-                    _unitOfWork.OrderRepository.Update(order);
-                    await _unitOfWork.SaveChangesAsync();
-                    return true;
+                    try
+                    {
+                        var buyer = await _unitOfWork.UserRepository.GetById(order.BuyerId).AsNoTracking().FirstOrDefaultAsync();
+                        order.Status = OrderStatus.Finished;
+                        order.Modified = DateTime.Now;
+                        order.ModifiedBy = userEmail;
+                        _unitOfWork.OrderRepository.Update(order);
+                        await _unitOfWork.SaveChangesAsync();
+                        await _emailService.SendEmail(new SendEmailRequest
+                        {
+                            To = buyer.Email,
+                            Subject = string.Format(notificationTemplate.Subject, order.Id),
+                            Content = string.Format(notificationTemplate.Body, order.Id)
+                        });
+                        await transaction.CommitAsync();
+                        return true;
+                    }
+                    catch (Exception)
+                    {
+                        await transaction.RollbackAsync();
+                        throw;
+                    }
                 }
             }
             return false;
@@ -253,15 +311,32 @@ namespace PiecykPolHurt.ApplicationLogic.Services
         {
             if (id != 0)
             {
+                using var transaction = await _unitOfWork.BeginTransactionAsync();
+                var notificationTemplate = await _unitOfWork.NotificationTypeRepository.GetByType(NotificationType.OrderCanceled).FirstOrDefaultAsync();
                 var order = await _unitOfWork.OrderRepository.GetById(id).FirstOrDefaultAsync();
-                if (order != null)
+                if (order != null && notificationTemplate!= null)
                 {
-                    order.Status = OrderStatus.Canceled;
-                    order.Modified = DateTime.Now;
-                    order.ModifiedBy = userEmail;
-                    _unitOfWork.OrderRepository.Update(order);
-                    await _unitOfWork.SaveChangesAsync();
-                    return true;
+                    try
+                    {
+                        order.Status = OrderStatus.Canceled;
+                        order.Modified = DateTime.Now;
+                        order.ModifiedBy = userEmail;
+                        _unitOfWork.OrderRepository.Update(order);
+                        await _unitOfWork.SaveChangesAsync();
+                        await _emailService.SendEmail(new SendEmailRequest
+                        {
+                            To = userEmail,
+                            Subject = string.Format(notificationTemplate.Subject, order.Id),
+                            Content = string.Format(notificationTemplate.Body, order.Id)
+                        });
+                        await transaction.CommitAsync();
+                        return true;
+                    }
+                    catch (Exception)
+                    {
+                        await transaction.RollbackAsync();
+                        throw;
+                    }
                 }
             }
             return false;
