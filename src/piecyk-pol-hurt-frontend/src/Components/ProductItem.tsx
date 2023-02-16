@@ -1,3 +1,4 @@
+import { useAuth0 } from "@auth0/auth0-react";
 import {
   Grid,
   Card,
@@ -8,6 +9,7 @@ import {
   Button,
 } from "@mui/material";
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 import { ProductSendPointListItemDto } from "../API/Models/Product/ProductSendPointListItemDto";
 import Counter from "../Common/Counter";
 interface IProductItem {
@@ -16,8 +18,13 @@ interface IProductItem {
 }
 const ProductItem = ({ product, handleAddToShoppingCart }: IProductItem) => {
   const [count, setCount] = useState<number>(0);
+  const {user} = useAuth0();
 
   const onAddToShoppingCartClick = () => {
+    if (!user) {
+      toast.info("Musisz się zalogować, żeby dodać do koszyka");
+      return;
+    }
     handleAddToShoppingCart(product, count);
     setCount(0);
   };

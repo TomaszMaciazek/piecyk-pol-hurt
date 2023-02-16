@@ -20,9 +20,6 @@ import Reports from "./Pages/Reports";
 
 const App = () => {
   document.title = "Piecyk Pol Hurt";
-  const permission = useSelector(
-    (state: RootState) => state.orders.permissions
-  );
 
   const { isLoading, getAccessTokenSilently, isAuthenticated, user } =
     useAuth0();
@@ -93,23 +90,13 @@ const App = () => {
               />
             }
           />
-          <Route path="/zmień-lokalizacje" element={<LocationChoosing />} />
+          <Route path="/zmien-lokalizacje" element={<LocationChoosing />} />
           <Route path="/sklep" element={<Shop />} />
-          {permission === UserRole.Admin && (
-            <>
-              <Route path="/produkty" element={<Products />} />
-              <Route path="/lokalizacje" element={<Locations />} />
-            </>
-          )}
-          {permission !== UserRole.LoggedUser &&
-            permission !== UserRole.UnloggedUser && (
-              <Route path="/raporty" element={<Reports />} />
-            )}
+          <Route path="/produkty" element={<Products />} />
+          <Route path="/lokalizacje" element={<Locations />} />
+          <Route path="/raporty" element={<Reports />} />
           <Route path="/koszyk" element={<ShoppingCart />} />
-          {permission === UserRole.LoggedUser ||
-            (permission === UserRole.Seller && (
-              <Route path="/zamówienia" element={<Orders />} />
-            ))}
+          <Route path="/zamowienia" element={<Orders />} />
         </Routes>
       </main>
     </BrowserRouter>

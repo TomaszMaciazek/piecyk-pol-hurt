@@ -23,7 +23,7 @@ namespace PiecykPolHurt.API.Controllers
             _user = user;
         }
 
-        [Authorize(Policy = Policy.Admin)]
+        [Authorize(Policy = Policy.Seller)]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginatedList<OrderListItemDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

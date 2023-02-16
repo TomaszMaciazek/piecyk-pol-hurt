@@ -51,11 +51,6 @@ const Reports = () => {
   const columns: GridColDef[] = [
     { field: "id", headerName: "Id", type: "number", flex: 0.5 },
     {
-      field: "name",
-      headerName: "Nazwa",
-      flex: 4,
-    },
-    {
       field: "title",
       headerName: "Tytuł",
       flex: 2,

@@ -37,13 +37,13 @@ const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
 
 const Navigation = () => {
   const permission = useSelector((state: RootState) => state.orders.permissions);
-
+  
   const [pages, setPages] = useState<string[]>([]);
   const [links, setLinks] = useState<string[]>([]);
 
   useEffect (() => {
     const newPages = ["Sklep", 'Zmień lokalizację'];
-    const newLinks = ["sklep", 'zmień-lokalizacje'];
+    const newLinks = ["sklep", 'zmien-lokalizacje'];
 
     if (permission === UserRole.Admin) {
       newPages.push('produkty', 'Lokalizacje');
@@ -53,9 +53,10 @@ const Navigation = () => {
       newPages.push('Raporty');
       newLinks.push('raporty');
     }
-    if (permission === UserRole.Seller || permission === UserRole.LoggedUser) {
-      newLinks.push("Zamówienia");
-      newLinks.push("zamówienia")
+    if (permission === UserRole.Seller || permission === UserRole.LoggedUser || permission === UserRole.Admin) {
+      newPages.push("Zamówienia");
+      newLinks.push("zamowienia")
+      
     }
 
     setPages(newPages);
