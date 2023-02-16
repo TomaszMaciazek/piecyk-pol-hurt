@@ -1,5 +1,7 @@
 # piecyk-pol-hurt
 
+Piecyk-Pol-Hurt is an application designed to support selling fuel materials and prepare reports based on data in the store database.
+
 ## This project consist of three main parts
 
 * API - backend API project
