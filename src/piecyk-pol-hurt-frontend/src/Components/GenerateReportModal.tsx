@@ -37,11 +37,14 @@ const GenerateReportModal = ({
       maxRows: maxRows,
       ParamsValues:paramValues
     };
-    console.log(paramValues);
 
     generateReport(query).then((fileBlob) => {
       const date = paramValues.find((item) => item.key === "dateFrom");
       if (!date) {
+        paramValues.push({
+          key: 'dateFrom',
+          values: [new Date().toISOString().split('T')[0]]
+        })
         return;
       }
 
